@@ -661,17 +661,28 @@ body {
 }
 
 .modern-header .header-logo {
-    height: 32px; /* Adjusted size */
-    width: auto;
+    height: 54px; /* Big & Bold */
+    width: 54px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f0f0f0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+    padding: 2px; 
+    background: #fff;
 }
 
 .modern-header .app-name-text {
     font-family: 'Outfit', sans-serif;
-    font-weight: 700;
-    font-size: 1.4rem;
-    color: #000;
-    letter-spacing: -0.5px;
+    font-weight: 800;
+    font-size: 1.8rem; /* Larger */
+    color: #1a1a1a;
+    letter-spacing: -1px; 
     text-transform: uppercase;
+    /* Absolute Center */
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.05); 
 }
 
 .modern-header .notif-btn {
@@ -700,7 +711,7 @@ body {
 /* Modern Hero Banner */
 .hero-banner {
     margin: 20px 24px 30px 24px;
-    background-color: #f2f4f6; /* Light grey background */
+    background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%); /* Subtle Gradient */
     border-radius: 28px;
     padding: 30px 24px;
     display: flex;
@@ -709,6 +720,8 @@ body {
     position: relative;
     overflow: hidden;
     min-height: 180px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Stronger Shadow */
+    border: 2px solid #ffffff; /* White border for pop */
 }
 
 .hero-content {
@@ -748,11 +761,13 @@ body {
     position: absolute;
     right: -20px;
     bottom: -10px;
-    width: 55%;
+    width: 60%; /* Slightly bigger */
     height: auto;
     object-fit: contain;
     z-index: 1;
-    transform: rotate(-5deg); /* Slight dynamic angle */
+    transform: rotate(-5deg); 
+    mix-blend-mode: multiply; /* Hides white background square */
+    filter: contrast(1.1) saturate(1.1); /* Pop colors */
 }
 
 /* Categories Scroll */
