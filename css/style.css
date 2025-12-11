@@ -646,7 +646,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: calc(env(safe-area-inset-top) + 15px) 24px 15px 24px;
+    padding: calc(env(safe-area-inset-top) + 15px) 8px 15px 8px;
     background: #ffffff;
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -710,7 +710,7 @@ body {
 
 /* Modern Hero Banner */
 .hero-banner {
-    margin: 20px 24px 30px 24px;
+    margin: 20px 8px 30px 8px;
     background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%); /* Subtle Gradient */
     border-radius: 28px;
     padding: 30px 24px;
@@ -772,7 +772,7 @@ body {
 
 /* Categories Scroll - Story Style */
 .category-section {
-    padding: 0 24px;
+    padding: 0 8px;
     margin-bottom: 25px;
 }
 
@@ -831,7 +831,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-end; 
-    padding: 0 24px;
+    padding: 0 8px;
     margin-bottom: 20px;
 }
 
@@ -855,7 +855,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    padding: 0 24px 110px 24px; 
+    padding: 0 8px 110px 8px; 
 }
 
 .modern-card {
