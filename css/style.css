@@ -386,23 +386,23 @@ body {
    6. SEARCH OVERLAY
    ========================================================================== */
 /* ==========================================================================
-   6. SEARCH OVERLAY (DARK PREMIUM DESIGN)
+   6. SEARCH OVERLAY (LIGHT PREMIUM DESIGN - INDEX STYLE)
    ========================================================================== */
 .search-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* Dark Background */
-    background: rgba(10, 10, 12, 0.92); 
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    /* Light Background matching Index */
+    background: rgba(255, 255, 255, 0.96); 
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     z-index: 2000;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 60px;
+    padding-top: 80px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .search-overlay:not(.hidden) {
@@ -418,98 +418,116 @@ body {
     align-items: center;
 }
 
-/* Wrapper Input e Risultati condividono la stessa larghezza visiva */
+/* Wrapper Input */
 .search-input-wrapper {
-    /* Larghezza identica ai risultati - aumentata per riempire */
-    width: 95%;
+    width: 90%;
     max-width: 600px;
-    
-    background: #1e1e1e; /* Dark Surface per la barra */
-    border: 1px solid rgba(255,255,255,0.1); 
-    border-radius: 20px;
-    padding: 18px 25px;
+    background: transparent;
+    border-bottom: 2px solid #e0e0e0; /* Light clean border */
+    padding: 10px 0;
     display: flex;
     align-items: center;
-    gap: 15px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4); 
+    justify-content: center; /* Center Content */
+    gap: 0;
     transform: translateY(-20px);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    color: #fff;
-    margin: 0 auto; /* Centrato */
+    color: #1a1a1a;
+    margin: 0 auto; 
+    position: relative;
 }
 .search-overlay:not(.hidden) .search-input-wrapper {
     transform: translateY(0);
 }
 
-.search-icon {
-    color: #a4b0be;
-    opacity: 1;
-}
+/* Removed Search Icon */
+.search-icon { display: none; }
 
 #global-search-input {
     flex: 1; 
     border: none; 
     background: transparent; 
     outline: none;
-    font-size: 1.1rem; 
-    color: #ffffff; /* White text */
-    font-weight: 500;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem; /* Significantly reduced from 1.8rem */
+    color: #1a1a1a; 
+    font-weight: 600;
+    text-align: center; 
 }
 #global-search-input::placeholder {
-    color: #636e72;
+    color: #a0a0a0;
+    font-weight: 500;
 }
 
+/* Close Button - Bottom Center RED */
 .close-search { 
-    background: rgba(255,255,255,0.1); 
+    position: absolute;
+    bottom: 50px; /* Easy thumb reach */
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto; right: auto; /* Reset previous pos */
+    
+    background: #ff4757; /* Red */
     border: none; 
     cursor: pointer; 
     color: #fff;
-    width: 36px; height: 36px;
+    width: 56px; height: 56px; /* Slightly larger target */
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+    z-index: 2005;
 }
-.close-search:hover { background: rgba(255,255,255,0.2); }
+.close-search:hover { background: #ff6b81; transform: translateX(-50%) scale(1.1) rotate(90deg); }
 
-/* Contenitore Risultati - Allineato a Input */
+/* Contenitore Risultati */
 .search-results { 
-    width: 95%; 
+    width: 90%; 
     max-width: 600px; 
-    margin-top: 30px; 
+    margin-top: 40px; 
     overflow-y: auto; 
-    max-height: calc(100vh - 180px);
-    padding-bottom: 40px;
+    max-height: calc(100vh - 200px);
+    padding-bottom: 100px;
     scrollbar-width: none;
 }
 .search-results::-webkit-scrollbar { display: none; }
 
-/* Stile Righe Risultati (Light / Bianco come richiesto) */
+/* Stile Righe Risultati (LIGHT PREMIUM CARDS) */
 .result-row { 
     display: flex; 
     align-items: center; 
     gap: 20px; 
-    padding: 20px;
-    background: #ffffff; /* Sfondo Bianco */
-    border: none;
-    border-radius: 16px;
+    padding: 16px 20px;
+    background: #ffffff; /* Sfondo Bianco - Card Style */
+    border: 1px solid #f0f0f0;
+    border-radius: 20px;
     margin-bottom: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: all 0.2s ease;
     cursor: pointer;
     /* Animazione entrata */
     opacity: 0;
     animation: slideUpFade 0.4s forwards;
-    color: var(--text-dark); /* Testo Scuro */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    color: #1a1a1a;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Soft Shadow */
 }
 
-/* Override colori testo per il tema chiaro */
-.result-row h4 { color: #2d3436 !important; font-weight: 600 !important; }
-.result-row p { color: #636e72 !important; }
+/* Stile Testi */
+.result-row h4 { 
+    color: #1a1a1a !important; 
+    font-weight: 700 !important; 
+    font-size: 1.1rem;
+}
+.result-row p { 
+    color: #666 !important; 
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
 
 .result-row:hover {
     transform: scale(1.02);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    background: #f8f9fa;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    background: #ffffff;
 }
 
 @keyframes slideUpFade {
@@ -519,9 +537,9 @@ body {
 
 .empty-state {
     text-align: center;
-    color: var(--text-muted);
+    color: #888;
     font-size: 1.1rem;
-    margin-top: 40px;
+    margin-top: 60px;
 }
 
 /* ==========================================================================

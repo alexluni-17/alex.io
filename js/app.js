@@ -65,21 +65,12 @@ function initLoader() {
 // 1. MOCK DATA (Contenuto per la ricerca)
 // ============================================================
 const appData = [
-    { id: 1, title: "Poker Texas", type: "Game", icon: "♠️" },
-    { id: 2, title: "Blackjack Live", type: "Game", icon: "♦️" },
-    { id: 3, title: "Slot Arcade", type: "Game", icon: "🎰" },
-    { id: 4, title: "Profilo Utente", type: "Setting", icon: "👤" },
-    { id: 5, title: "Impostazioni Privacy", type: "Setting", icon: "⚙️" },
-    { id: 6, title: "Torneo Settimanale", type: "Event", icon: "🏆" },
-    { id: 7, title: "Amici Online", type: "Social", icon: "🟢" },
-    { id: 8, title: "Negozio", type: "Shop", icon: "🛒" },
-    { id: 9, title: "Torneo Pro", type: "Event", icon: "🎮" },
-    { id: 10, title: "Sfida Live", type: "Event", icon: "⚔️" },
-    { id: 11, title: "Arcade Infinity", type: "Game mode", icon: "🕹️" },
-    { id: 12, title: "VR World", type: "Map", icon: "🥽" },
-    { id: 13, title: "Livello 12", type: "Stat", icon: "⭐" },
-    { id: 14, title: "Vittorie (504)", type: "Stat", icon: "🏅" },
-    { id: 15, title: "Rank Gold", type: "Stat", icon: "🥇" }
+    { id: 1, title: "Torneo Pro", type: "Esports", icon: "🎮", link: "index.html" },
+    { id: 2, title: "Sfida Live", type: "Multiplayer", icon: "⚔️", link: "giochi.html" },
+    { id: 3, title: "Arcade", type: "Endless Run", icon: "🕹️", link: "giochi.html" },
+    { id: 4, title: "VR World", type: "Immersive", icon: "🥽", link: "giochi.html" },
+    { id: 5, title: "Poker Night", type: "Card Game", icon: "♠️", link: "giochi.html" },
+    { id: 6, title: "Scacchi 3D", type: "Strategy", icon: "♟️", link: "giochi.html" }
 ];
 
 // ============================================================
@@ -145,18 +136,18 @@ function initSearch() {
 // Funzione Helper per HTML dei risultati
 function renderResults(items, container) {
     if (items.length === 0) {
-        container.innerHTML = `<div style="text-align:center; color:#b2bec3; margin-top:20px;">Nessun risultato trovato.</div>`;
+        container.innerHTML = `<div style="text-align:center; color:#888; margin-top:20px;">Nessun risultato trovato.</div>`;
         return;
     }
 
     const html = items.map((item, index) => `
-        <div class="result-row" style="animation-delay: ${index * 0.05}s">
+        <a href="${item.link}" class="result-row" style="animation-delay: ${index * 0.05}s; text-decoration: none;">
             <div style="font-size: 1.5rem;">${item.icon}</div>
             <div>
-                <h4 style="margin:0; font-weight:600; color:#2d3436;">${item.title}</h4>
-                <p style="margin:0; font-size:0.8rem; color:#b2bec3;">${item.type}</p>
+                <h4 style="margin:0; font-weight:700; color:#1a1a1a;">${item.title}</h4>
+                <p style="margin:0; font-size:0.8rem; color:#666;">${item.type}</p>
             </div>
-        </div>
+        </a>
     `).join('');
 
     container.innerHTML = html;
