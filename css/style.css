@@ -847,7 +847,7 @@ body {
 /* --- FLOATING ACTION BUTTONS CONTAINER --- */
 .floating-actions-container {
     position: absolute;
-    bottom: 25px;
+    bottom: 80px; /* Raised significantly higher */
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -916,7 +916,7 @@ body {
     width: 100%;
     max-width: 340px;
     border-radius: 28px;
-    padding: 24px;
+    padding: 18px;
     box-shadow: 0 25px 60px rgba(0,0,0,0.3);
     animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: flex;

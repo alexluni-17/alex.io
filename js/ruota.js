@@ -173,41 +173,117 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.shadowBlur = 0;
     }
 
-    // --- EASING FUNCTION MIGLIORATO ---
-    function easingCurve(velocity) {
-        const normalizedV = Math.abs(velocity) / initialVelocity;
-        
-        if (normalizedV > 0.7) {
-            return 0.985; // Slow friction all'inizio
-        } else if (normalizedV > 0.3) {
-            return 0.970; // Medium friction
-        } else {
-            return 0.945; // Fast friction = stop più naturale
+    // --- SOUND ENGINE (WEB AUDIO API) ---
+    const SoundEngine = {
+        ctx: null,
+        init: function() {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
+        },
+        playTick: function() {
+            if (!this.ctx) this.init();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            // Crisp high-pitch click
+            osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, this.ctx.currentTime + 0.01);
+            
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.05);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            
+            osc.type = 'triangle';
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.05);
+        },
+        playWin: function() {
+            if (!this.ctx) this.init();
+            if (this.ctx.state === 'suspended') this.ctx.resume();
+            
+            const now = this.ctx.currentTime;
+            
+            // Chord: C Major (C5, E5, G5)
+            [523.25, 659.25, 783.99].forEach((freq, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                
+                gain.gain.setValueAtTime(0, now + i * 0.1);
+                gain.gain.linearRampToValueAtTime(0.1, now + i * 0.1 + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 1.5);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.type = 'sine';
+                osc.start(now + i * 0.1);
+                osc.stop(now + i * 0.1 + 1.5);
+            });
         }
-    }
+    };
+
+    // --- PHYSICS STATE ---
+    let spinType = 'classic';
+    let spinDuration = 0;
+    let spinStartTime = 0;
+    
+    // 5 Spin Presets (Physics Logic)
+    const spinPresets = [
+        { name: 'classic', friction: 0.985, initialMult: 1.0 }, // Standard
+        { name: 'long_suspense', friction: 0.992, initialMult: 1.4 }, // Very long spin
+        { name: 'quick_brake', friction: 0.96, initialMult: 1.2 }, // Fasts then sudden stop
+        { name: 'chaos', friction: 0.98, initialMult: 1.1, chaos: true }, // Unstable friction
+        { name: 'smooth_operator', friction: 0.99, initialMult: 0.9 } // Slow and steady
+    ];
+
+    let currentPreset = spinPresets[0];
 
     // --- LOOP DI ANIMAZIONE OTTIMIZZATO ---
-    function animate() {
+    let lastRotationC = 0; // Per tracking ticks sui bordi
+
+    function animate(timestamp) {
         if (isSpinning) {
+            // Applica fisica dello spin corrente
+            if (currentPreset.name === 'chaos') {
+                 // Random fluctionation in friction
+                 spinVelocity *= (currentPreset.friction - (Math.random() * 0.01));
+            } else {
+                 spinVelocity *= currentPreset.friction;
+            }
+
             currentRotation += spinVelocity;
-            
-            // Easing dinamico invece di friction statico
-            spinVelocity *= easingCurve(spinVelocity);
-            
             needsRedraw = true;
             
-            // Threshold più basso per stop smooth
-            if (Math.abs(spinVelocity) < 0.001) {
+            // Audio Ticks Logic
+            // Calcola se abbiamo attraversato un 'bordo' di spicchio
+            const arcSize = (2 * Math.PI) / names.length;
+            const normalizedRot = currentRotation % (2 * Math.PI);
+            
+            // Semplice check: se (angolo / arcSize) integer changes
+            // Note: This logic needs to be robust for any speed
+            // Use angle difference
+            if (Math.floor(currentRotation / arcSize) !== Math.floor(lastRotationC / arcSize)) {
+                SoundEngine.playTick();
+            }
+            lastRotationC = currentRotation;
+
+            // Stop condition
+            if (Math.abs(spinVelocity) < 0.002) {
                 isSpinning = false;
                 spinVelocity = 0;
                 needsRedraw = true;
                 
-                // Determina vincitore con piccolo delay per smoothness
-                setTimeout(() => determineWinner(), 100);
+                SoundEngine.playWin();
+                setTimeout(() => determineWinner(), 300);
             }
         }
         
-        // CRITICO: Ridisegna SOLO se necessario
         if (needsRedraw) {
             drawWheel();
             needsRedraw = false;
@@ -220,22 +296,28 @@ document.addEventListener('DOMContentLoaded', () => {
     function triggerSpin() {
         if (isSpinning || names.length === 0) return;
         
-        // Haptic feedback se supportato
-        if (navigator.vibrate) {
-            navigator.vibrate(50);
-        }
+        // Init Audio Context on user interaction
+        SoundEngine.init();
+        if (SoundEngine.ctx && SoundEngine.ctx.state === 'suspended') SoundEngine.ctx.resume();
+
+        // 1. Pick Random Preset
+        currentPreset = spinPresets[Math.floor(Math.random() * spinPresets.length)];
+        console.log("Spin Type:", currentPreset.name);
+
+        // 2. Base Velocity randomized
+        // Base speed around 0.3 - 0.5 rad/frame
+        const baseSpeed = (0.25 + Math.random() * 0.25) * currentPreset.initialMult;
         
-        // Velocità più varia per naturalezza
-        const baseSpeed = 30 + Math.random() * 25;
-        spinVelocity = baseSpeed * 0.018;
-        initialVelocity = spinVelocity; // Salva per easing
+        spinVelocity = baseSpeed;
+        initialVelocity = spinVelocity;
         
         isSpinning = true;
         needsRedraw = true;
+        lastRotationC = currentRotation; 
     }
 
     // Event listeners per spin
-    canvas.addEventListener('click', triggerSpin);
+    canvas.addEventListener('click', () => triggerSpin());
     canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         triggerSpin();
