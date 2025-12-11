@@ -41,7 +41,7 @@ body {
 
 /* Fix sovrapposizione header */
 #app {
-    padding-top: 20px; 
+    padding-top: 0; 
 }
 
 .fade-in {
@@ -57,7 +57,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px 30px 24px;
+    padding: calc(env(safe-area-inset-top) + 20px) 24px 30px 24px;
     /* Immagine di sfondo locale */
     background: url('../logo.png') center/cover no-repeat;
     position: sticky;
