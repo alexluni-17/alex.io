@@ -97,7 +97,8 @@ function initNavigation() {
 // ============================================================
 function initSearch() {
     // Elementi DOM
-    const fab = document.querySelector('.center-btn'); 
+    // Selettore aggiornato per il nuovo tasto nella header (o fallback se esiste ancora altrove)
+    const fab = document.querySelector('.search-trigger-btn') || document.querySelector('.center-btn'); 
     
     const overlay = document.getElementById('search-overlay');
     const closeBtn = document.getElementById('close-search-btn');
