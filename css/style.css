@@ -770,56 +770,60 @@ body {
     filter: contrast(1.1) saturate(1.1); /* Pop colors */
 }
 
-/* Categories Scroll */
+/* Categories Scroll - Story Style */
 .category-section {
     padding: 0 24px;
-    margin-bottom: 35px;
+    margin-bottom: 25px;
 }
 
 .cat-scroll {
     display: flex;
-    gap: 16px;
+    gap: 15px;
     overflow-x: auto;
     padding-bottom: 5px; 
+    padding-left: 5px; /* Space for shadow */
     scrollbar-width: none; 
 }
 .cat-scroll::-webkit-scrollbar { display: none; }
 
 .cat-item {
-    min-width: 72px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 0;
     text-decoration: none;
+    cursor: pointer;
 }
 
+/* Instagram Story Ring */
 .cat-icon-box {
     width: 68px;
     height: 68px;
-    border-radius: 22px;
-    border: 1px solid #efefef;
-    background: #fff;
+    border-radius: 50%;
+    /* Instagram Gradient Ring */
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    padding: 3px; /* Thickness of the ring */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.6rem;
-    color: #333;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    transition: transform 0.2s;
 }
 
-.cat-item.active .cat-icon-box {
-    background: #1a1a1a;
-    color: #fff;
-    border-color: #1a1a1a;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+.cat-item:active .cat-icon-box {
+    transform: scale(0.95);
+}
+
+.cat-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 3px solid #fff; /* White space between ring and image */
+    object-fit: cover;
+    background: #fff;
 }
 
 .cat-label {
-    font-size: 0.8rem;
-    color: #555;
-    font-weight: 600;
+    display: none; /* Hide labels as requested */
 }
 
 /* Section Head */
