@@ -61,8 +61,8 @@ body {
     align-items: center;
     padding: calc(env(safe-area-inset-top) + 20px) 24px 30px 24px;
     /* Immagine di sfondo locale */
-    background: url('../logo.png') center/cover no-repeat;
-    background: url('../logo.png') center/cover no-repeat;
+    background: url('../img/logo.png') center/cover no-repeat;
+    background: url('../img/logo.png') center/cover no-repeat;
     position: fixed;
     top: 0; left: 0; right: 0; /* Full width fixed */
     z-index: 50;
