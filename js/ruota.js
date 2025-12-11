@@ -1,76 +1,98 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- CONFIGURATION ---
+    // --- CONFIGURAZIONE CANVAS ---
     const canvas = document.getElementById('wheelCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Scale for Retina
+    // Gestione Risoluzione Retina (HiDPI)
+    // Manteniamo la risoluzione interna alta (600x600) anche se il CSS la scala visivamente
     const scale = window.devicePixelRatio || 1;
-    canvas.width = 600 * scale;
-    canvas.height = 600 * scale;
+    const baseSize = 600; 
+    
+    canvas.width = baseSize * scale;
+    canvas.height = baseSize * scale;
     ctx.scale(scale, scale);
     
-    const cw = 600;
-    const ch = 600;
+    const cw = baseSize;
+    const ch = baseSize;
     const cx = cw / 2;
     const cy = ch / 2;
-    const radius = 280; // slightly less than 300 to fit padding
+    const radius = 270; // Raggio leggermente ridotto per lasciare margine
 
-    // Initial Names
+    // --- DATI INIZIALI ---
     let names = [
-        "Ali", "Beatriz", "Charles", "Diya", 
-        "Eric", "Fatima", "Gabriel", "Hanna"
+        "Ali", "Beatriz", "Carlo", "Diya", 
+        "Eric", "Fatima", "Gabriele", "Hanna"
     ];
 
-    // Colors Palette (Vibrant)
+    // Palette Colori (Vividi e Moderni)
     const colors = [
-        '#FF6B6B', '#4ECDC4', '#FFE66D', '#1A535C', 
-        '#FF9F43', '#54A0FF', '#5F27CD', '#C4E538'
+        '#FF3F34', // Red (Scuro)
+        '#0BE881', // Green (Chiaro) -> TESTO NERO
+        '#3C40C6', // Blue (Scuro)
+        '#FFC048', // Orange (Chiaro) -> TESTO NERO
+        '#17c0eb', // Cyan (Chiaro) -> TESTO NERO
+        '#8E44AD', // Purple (Scuro)
+        '#ffb8b8', // Pink (Chiaro) -> TESTO NERO
+        '#fff200'  // Yellow (Chiaro) -> TESTO NERO
     ];
 
-    // State
-    let currentRotation = 0; // in radians
+    // Lista dei colori che richiedono testo scuro per leggibilità
+    const lightColors = ['#0BE881', '#FFC048', '#17c0eb', '#ffb8b8', '#fff200'];
+
+    // --- STATO DEL GIOCO ---
+    let currentRotation = 0; // Angolo attuale
     let isSpinning = false;
     let spinVelocity = 0;
-    let spinFriction = 0.985; // Deceleration factor
+    let spinFriction = 0.980; // Decelerazione (più basso = frena prima)
 
-    // Elements
+    // --- ELEMENTI DOM ---
     const namesInput = document.getElementById('names-input');
-    const updateBtn = document.getElementById('update-btn');
-    const clearBtn = document.getElementById('clear-btn');
-    const spinBtn = document.getElementById('spin-btn');
-    const shuffleBtn = document.getElementById('shuffle-btn');
     const entriesCount = document.getElementById('entries-count');
+    const clearBtn = document.getElementById('clear-btn');
+    const shuffleBtn = document.getElementById('shuffle-btn');
     
-    // Modal Elements
+    // Elementi Modale Vincitore
     const winnerModal = document.getElementById('winner-modal');
     const winnerNameDisplay = document.getElementById('winner-name-display');
-    const closeModalBtn = document.getElementById('modal-close-btn');
-    const removeWinnerBtn = document.getElementById('modal-remove-btn');
-    const closeXBtn = document.getElementById('close-winner-x');
+    const closeXBtn = document.getElementById('close-winner-x');     // La X in alto
+    const closeModalBtn = document.getElementById('modal-close-btn'); // Bottone "Chiudi"
+    const removeWinnerBtn = document.getElementById('modal-remove-btn'); // Bottone "Rimuovi"
 
-    // --- INITIALIZATION ---
+    // --- INIZIALIZZAZIONE ---
     function init() {
+        // Popola la textarea con i nomi iniziali
         namesInput.value = names.join('\n');
         updateUI();
         drawWheel();
-        animate();
+        animate(); // Avvia il loop di animazione
     }
 
-    // --- DRAWING ---
+    // --- MOTORE GRAFICO (DRAW) ---
     function drawWheel() {
+        // Pulisci il canvas
+        ctx.clearRect(0, 0, cw, ch);
+
+        // Caso: Nessun nome inserito
         if (names.length === 0) {
-            ctx.clearRect(0,0,cw,ch);
-            ctx.font = "30px Outfit";
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = "#f5f5f5"; // Sfondo grigio vuoto
+            ctx.fill();
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            ctx.font = "bold 30px Outfit, sans-serif";
             ctx.fillStyle = "#ccc";
             ctx.textAlign = "center";
-            ctx.fillText("Aggiungi nomi per iniziare", cx, cy);
+            ctx.textBaseline = "middle";
+            ctx.fillText("Aggiungi nomi", cx, cy);
+            ctx.restore();
             return;
         }
 
         const arcSize = (2 * Math.PI) / names.length;
-
-        // Clear
-        ctx.clearRect(0, 0, cw, ch);
 
         ctx.save();
         ctx.translate(cx, cy);
@@ -78,118 +100,152 @@ document.addEventListener('DOMContentLoaded', () => {
 
         names.forEach((name, i) => {
             const angle = i * arcSize;
+            const color = colors[i % colors.length];
             
-            // Draw Slice
+            // 1. Disegna Spicchio
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, radius, angle, angle + arcSize);
             ctx.closePath();
-            ctx.fillStyle = colors[i % colors.length];
+            ctx.fillStyle = color;
             ctx.fill();
+            
+            // Bordo bianco tra gli spicchi per pulizia visiva
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = "#ffffff";
             ctx.stroke();
 
-            // Draw Text
+            // 2. Disegna Testo
             ctx.save();
+            // Ruota per allineare il testo al centro dello spicchio
             ctx.rotate(angle + arcSize / 2);
             ctx.textAlign = "right";
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 24px Outfit, sans-serif";
-            // shadow
-            ctx.shadowColor = "rgba(0,0,0,0.3)";
-            ctx.shadowBlur = 4;
-            ctx.fillText(name, radius - 40, 10);
+            ctx.textBaseline = "middle";
+            ctx.font = "bold 28px Outfit, sans-serif";
+
+            // LOGICA COLORE TESTO (Bianco vs Nero)
+            if (lightColors.includes(color)) {
+                ctx.fillStyle = "#1a1a1a"; // Nero per sfondi chiari
+                ctx.shadowColor = "transparent";
+            } else {
+                ctx.fillStyle = "#ffffff"; // Bianco per sfondi scuri
+                ctx.shadowColor = "rgba(0,0,0,0.3)";
+                ctx.shadowBlur = 4;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+            }
+
+            // TRONCAMENTO TESTO (Se > 14 caratteri)
+            let displayName = name;
+            if (name.length > 14) {
+                displayName = name.substring(0, 12) + "...";
+            }
+
+            // Disegna il testo leggermente staccato dal bordo esterno
+            ctx.fillText(displayName, radius - 30, 0);
             ctx.restore();
         });
 
-        // Center White Circle (Donut style)
+        ctx.restore();
+
+        // 3. Cerchio Centrale (Donut Style)
+        // Crea l'effetto "buco" al centro
         ctx.beginPath();
-        ctx.arc(0, 0, 60, 0, 2 * Math.PI);
+        ctx.arc(cx, cy, 50, 0, 2 * Math.PI);
         ctx.fillStyle = "#ffffff";
         ctx.fill();
-        ctx.restore();
+        // Ombra interna leggera
+        ctx.shadowColor = "rgba(0,0,0,0.15)";
+        ctx.shadowBlur = 10;
+        ctx.stroke();
     }
 
-    // --- PHYSICS ---
+    // --- FISICA E ANIMAZIONE ---
     function animate() {
         if (isSpinning) {
             currentRotation += spinVelocity;
-            spinVelocity *= spinFriction; // Apply friction
+            spinVelocity *= spinFriction; // Applica attrito
 
-            // Stop condition
+            // Condizione di arresto
             if (spinVelocity < 0.002) {
                 isSpinning = false;
                 spinVelocity = 0;
                 determineWinner();
             }
         }
-        drawWheel();
+        drawWheel(); // Ridisegna sempre
         requestAnimationFrame(animate);
     }
 
-    function determineWinner() {
-        // Pointer is at RIGHT = 0 radians in Canvas by default (Standard Position)
-        // But we rotated the wheel by `currentRotation`.
-        // We need to find which slice is crossing the 0-degree line (Right side).
-        
-        // Normalize rotation to 0 - 2PI
-        let normalizedRotation = currentRotation % (2 * Math.PI);
-        if (normalizedRotation < 0) normalizedRotation += 2 * Math.PI;
-
-        // The wheel rotates CLOCKWISE (positive angle).
-        // The slice that is at angle A (starting at 0) will move to A + rotation.
-        // We want to know which slice covers angle 0 (Right Pointer).
-        // Since we are checking what is at 0, effectively we need to check: 
-        // Index i where: (i * arc + rotation) contains 2PI (or 0).
-        // A bit easier math: Reverse the rotation to find where the pointer "hits" the static wheel layout.
-        
-        const arcSize = (2 * Math.PI) / names.length;
-        
-        // Pointer is at 0 degrees.
-        // Relative pointer angle on the wheel = (2PI - normalizedRotation) % 2PI
-        let pointerAngle = (2 * Math.PI - normalizedRotation) % (2 * Math.PI);
-        
-        const winningIndex = Math.floor(pointerAngle / arcSize);
-        const winner = names[winningIndex];
-
-        showWinner(winner);
-    }
-
-    // --- CONTROLS LOGIC ---
     function triggerSpin() {
         if (isSpinning || names.length === 0) return;
         
-        // Random massive spin
-        const baseSpin = 20 + Math.random() * 10; // speed
-        spinVelocity = baseSpin * 0.015; // impulse
+        // Calcola una forza casuale
+        // Random tra 25 e 45 (velocità)
+        const baseSpeed = 25 + Math.random() * 20; 
+        spinVelocity = baseSpeed * 0.015; // Scala per i radianti
         isSpinning = true;
     }
 
-    // Tap to Spin
+    // Tap sulla ruota per girare
     canvas.addEventListener('click', triggerSpin);
-    spinBtn.addEventListener('click', triggerSpin);
+    // Supporto touch per mobile (spesso click basta, ma questo migliora la reattività)
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Evita doppio evento click
+        triggerSpin();
+    }, {passive: false});
 
-    // Live Update (No Button needed)
+    // --- LOGICA VINCITORE ---
+    function determineWinner() {
+        // La freccia è a ORE 3 (0 radianti in Canvas standard)
+        // Ma noi ruotiamo l'intero contesto.
+        
+        const arcSize = (2 * Math.PI) / names.length;
+        
+        // Normalizza la rotazione tra 0 e 2PI
+        let normalizedRotation = currentRotation % (2 * Math.PI);
+        if (normalizedRotation < 0) normalizedRotation += 2 * Math.PI;
+        
+        // Calcolo inverso: Quale spicchio tocca l'angolo 0?
+        // Formula: (2PI - rotazione) % 2PI
+        let pointerAngle = (2 * Math.PI - normalizedRotation) % (2 * Math.PI);
+        
+        const winningIndex = Math.floor(pointerAngle / arcSize);
+        
+        // Controllo di sicurezza sull'indice
+        if (winningIndex >= 0 && winningIndex < names.length) {
+            const winnerName = names[winningIndex];
+            showWinnerModal(winnerName);
+        }
+    }
+
+    // --- GESTIONE INTERFACCIA (UI) ---
+    
+    // 1. Aggiornamento Live dalla Textarea
     namesInput.addEventListener('input', () => {
         const raw = namesInput.value;
+        // Filtra righe vuote
         const newNames = raw.split('\n').map(n => n.trim()).filter(n => n.length > 0);
         
-        // Only update if we have content, otherwise keep empty array but don't break
         names = newNames;
         updateUI();
         drawWheel();
     });
 
-    // Remove explicit update logic if previously bound to button
-    // updateBtn listener is removed
-
+    // 2. Bottone Pulisci
     clearBtn.addEventListener('click', () => {
-        names = [];
-        namesInput.value = "";
-        updateUI();
-        drawWheel();
+        if(confirm("Vuoi cancellare tutti i nomi?")) {
+            names = [];
+            namesInput.value = "";
+            updateUI();
+            drawWheel();
+        }
     });
 
+    // 3. Bottone Shuffle (Mischia)
     shuffleBtn.addEventListener('click', () => {
+        if (names.length < 2) return;
+        // Algoritmo Fisher-Yates semplificato
         names.sort(() => Math.random() - 0.5);
         namesInput.value = names.join('\n');
         drawWheel();
@@ -197,31 +253,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateUI() {
         entriesCount.textContent = names.length;
+        // Disabilita shuffle se pochi nomi
+        if (names.length < 2) shuffleBtn.style.opacity = "0.5";
+        else shuffleBtn.style.opacity = "1";
     }
 
-    // --- WINNER MODAL ---
-    function showWinner(name) {
+    // --- GESTIONE MODALE VINCITORE ---
+    function showWinnerModal(name) {
         winnerNameDisplay.textContent = name;
         winnerModal.classList.remove('hidden');
-        // Simple confetti or pop effect could go here
+        // Qui potresti lanciare coriandoli JS se volessi
     }
 
-    function closeWinnerModal() {
+    function hideWinnerModal() {
         winnerModal.classList.add('hidden');
     }
 
-    closeModalBtn.addEventListener('click', closeWinnerModal);
-    closeXBtn.addEventListener('click', closeWinnerModal);
+    // Listener per chiusura modale
+    closeXBtn.addEventListener('click', hideWinnerModal);
+    closeModalBtn.addEventListener('click', hideWinnerModal);
 
+    // Listener per rimozione vincitore
     removeWinnerBtn.addEventListener('click', () => {
         const winner = winnerNameDisplay.textContent;
-        names = names.filter(n => n !== winner);
+        
+        // Rimuovi il nome dall'array
+        // Nota: Rimuove solo la prima occorrenza se ce ne sono doppi
+        const index = names.indexOf(winner);
+        if (index > -1) {
+            names.splice(index, 1);
+        }
+        
+        // Aggiorna Textarea e UI
         namesInput.value = names.join('\n');
         updateUI();
         drawWheel();
-        closeWinnerModal();
+        
+        hideWinnerModal();
     });
 
-    // Start
+    // Chiudi modale cliccando fuori dalla card (Overlay)
+    winnerModal.addEventListener('click', (e) => {
+        if (e.target === winnerModal) {
+            hideWinnerModal();
+        }
+    });
+
+    // Avvio applicazione
     init();
 });
