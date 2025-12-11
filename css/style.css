@@ -152,19 +152,27 @@ body {
    4. CONTENUTO PRINCIPALE & Headings
    ========================================================================== */
 .section-header {
+    padding: 0 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Header Fisso per le pagine interne (Giochi, Avatar, Settings) */
+.page-header {
     padding: calc(env(safe-area-inset-top) + 15px) 24px 15px 24px;
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* Fixed Positioning for internal pages too */
     position: fixed;
     top: 0; left: 0; right: 0;
-    background: var(--bg-main); /* Match bg */
+    background: var(--bg-main);
     z-index: 40;
-    /* Blur effect for scrolling content behind */
     backdrop-filter: blur(10px);
     background: rgba(240, 242, 245, 0.95);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
 }
 /* Spacer for fixed headers */
 #app {
