@@ -794,15 +794,29 @@ body {
 .wheel-pointer {
     position: absolute;
     top: 50%;
-    right: -14px; /* Slightly outside */
+    right: -24px; /* Move slightly further right for the larger 48px size */
     transform: translateY(-50%);
-    width: 0; 
-    height: 0; 
-    border-top: 18px solid transparent;
-    border-bottom: 18px solid transparent;
-    border-right: 32px solid #1a1a1a;
-    filter: drop-shadow(-2px 4px 6px rgba(0,0,0,0.2));
     z-index: 10;
+    
+    /* Clean reset */
+    background: none;
+    border: none;
+    
+    /* SVG Triangle: Pointing Left */
+    /* Fill: #1a1a1a (Black), Stroke: #ffffff (White), Stroke-Width: 4 */
+    width: 48px; 
+    height: 48px;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 24L44 6V42L8 24Z' fill='%231a1a1a' stroke='%23ffffff' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Soft shadow removed as per 'solo un bordo' interpretation, or kept very subtle? */
+    /* User said "solo un bordo contorno" -> removing shadow to be safe and clean */
+    filter: none;
+}
+
+/* Remove old hacks */
+.wheel-pointer::after {
+    display: none;
 }
 
 .spin-indicator {
@@ -839,32 +853,34 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Was center, now start to move up */
     position: relative;
-    padding-bottom: 90px; /* Increased space */
+    padding-top: 40px; /* Push down slightly from header, but overall higher than center */
+    padding-bottom: 90px;
 }
 
 /* --- FLOATING ACTION BUTTONS CONTAINER --- */
 .floating-actions-container {
     position: absolute;
-    bottom: 80px; /* Raised significantly higher */
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 120px; /* Raised significantly higher (was 80px) */
+    width: 100%;
     display: flex;
-    align-items: center;
-    gap: 10px; /* Space between buttons */
+    justify-content: center;
+    gap: 15px;
     z-index: 30;
+    pointer-events: none; /* Let clicks pass strictly through gaps */
 }
+
 
 .floating-manage-btn {
     background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
     color: #fff;
     border: none;
-    padding: 14px 28px;
-    border-radius: 30px;
+    padding: 10px 20px; /* Smaller padding */
+    border-radius: 12px; /* More squared */
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.9rem; /* Smaller font */
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -881,14 +897,18 @@ body {
     background: #fff;
     color: #1a1a1a;
     border: 2px solid #eee;
-    width: 48px; height: 48px;
-    border-radius: 50%;
+    width: 40px; height: 40px; /* Smaller size */
+    border-radius: 12px; /* More squared (matching manage btn) */
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.floating-icon-btn svg {
+    width: 20px; height: 20px; /* Smaller icon */
 }
 
 .floating-icon-btn:active {
