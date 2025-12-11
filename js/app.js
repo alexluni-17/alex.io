@@ -18,17 +18,47 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================================
 function initLoader() {
     const loader = document.getElementById('app-loader');
-    
-    // Mostra il loader per almeno 1.5 secondi per effetto "Premium"
-    // Poi nascondi con dissolvenza
-    setTimeout(() => {
+    if (!loader) return;
+
+    // Tempo minimo di visualizzazione (per evitare flash troppo rapidi)
+    const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Promise che attende le immagini O un timeout di sicurezza (es. 5s)
+    const imagesPromise = new Promise(resolve => {
+        const images = Array.from(document.querySelectorAll('img'));
+        const validImages = images.filter(img => img.src && !img.complete);
+
+        if (validImages.length === 0) {
+            resolve(); 
+            return;
+        }
+
+        let loadedCount = 0;
+        const total = validImages.length;
+        const checkDone = () => {
+            loadedCount++;
+            if (loadedCount === total) resolve();
+        };
+
+        validImages.forEach(img => {
+            img.onload = checkDone;
+            img.onerror = checkDone; 
+        });
+    });
+
+    // Timeout di sicurezza: se le immagini non caricano entro 5 secondi, sblocca comunque
+    const safetyTimeout = new Promise(resolve => setTimeout(resolve, 5000));
+
+    // Vinci chi arriva prima tra ImmaginiComplete e TimeoutSicurezza
+    const resourceLoading = Promise.race([imagesPromise, safetyTimeout]);
+
+    // Attendi sia il tempo minimo (1.5s) SIA il caricamento (o timeout 5s)
+    Promise.all([minLoadTime, resourceLoading]).then(() => {
         loader.classList.add('hidden');
-        
-        // Rimuovi dal DOM dopo transizione CSS (0.5s) per performance
         setTimeout(() => {
-            loader.style.display = 'none';
+             loader.style.display = 'none';
         }, 500);
-    }, 1500);
+    });
 }
 
 // ============================================================
