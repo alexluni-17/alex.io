@@ -1,22 +1,48 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- CONFIGURAZIONE CANVAS ---
     const canvas = document.getElementById('wheelCanvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { alpha: false }); // Performance boost
+
+    // --- STATO DEL GIOCO (MOVED UP) ---
+    let currentRotation = 0;
+    let isSpinning = false;
+    let spinVelocity = 0;
+    let initialVelocity = 0; // Per easing dinamico
+    let needsRedraw = true; // Flag per rendering ottimizzato
+    let inputTimeout; // Per debouncing
     
-    // Gestione Risoluzione Retina (HiDPI)
-    // Manteniamo la risoluzione interna alta (600x600) anche se il CSS la scala visivamente
-    const scale = window.devicePixelRatio || 1;
-    const baseSize = 600; 
+    // Gestione Risoluzione Retina (HiDPI) - Ottimizzato
+    const setupCanvas = () => {
+        const dpr = window.devicePixelRatio || 1;
+        // Usa getBoundingClientRect per ottenere la grandezza reale visualizzata (controllata da CSS)
+        const rect = canvas.getBoundingClientRect();
+        
+        // Imposta la dimensione del buffer interno
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        
+        // Scala il contesto per disegnare usando coordinate logiche
+        // NOTA: Calcoliamo lo scale factor basato sulla dimensione base desiderata (600x600)
+        // in modo che drawWheel possa usare sempre coordinate fisse (radius=270, etc)
+        const scaleX = (rect.width * dpr) / 600;
+        const scaleY = (rect.height * dpr) / 600;
+        ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0); // Use setTransform to reset and scale
+        
+        // NON impostare style.width/height qui, lascia che sia il CSS a gestirlo
+        // canvas.style.width = ... (RIMOSSO)
+        
+        needsRedraw = true;
+    };
     
-    canvas.width = baseSize * scale;
-    canvas.height = baseSize * scale;
-    ctx.scale(scale, scale);
+    // Chiamata iniziale e al resize
+    setupCanvas();
     
+    const baseSize = 600;
     const cw = baseSize;
     const ch = baseSize;
     const cx = cw / 2;
     const cy = ch / 2;
-    const radius = 270; // Raggio leggermente ridotto per lasciare margine
+    const radius = 270;
 
     // --- DATI INIZIALI ---
     let names = [
@@ -26,24 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Palette Colori (Vividi e Moderni)
     const colors = [
-        '#FF3F34', // Red (Scuro)
-        '#0BE881', // Green (Chiaro) -> TESTO NERO
-        '#3C40C6', // Blue (Scuro)
-        '#FFC048', // Orange (Chiaro) -> TESTO NERO
-        '#17c0eb', // Cyan (Chiaro) -> TESTO NERO
-        '#8E44AD', // Purple (Scuro)
-        '#ffb8b8', // Pink (Chiaro) -> TESTO NERO
-        '#fff200'  // Yellow (Chiaro) -> TESTO NERO
+        '#FF3F34', '#0BE881', '#3C40C6', '#FFC048',
+        '#17c0eb', '#8E44AD', '#ffb8b8', '#fff200'
     ];
 
-    // Lista dei colori che richiedono testo scuro per leggibilità
     const lightColors = ['#0BE881', '#FFC048', '#17c0eb', '#ffb8b8', '#fff200'];
-
-    // --- STATO DEL GIOCO ---
-    let currentRotation = 0; // Angolo attuale
-    let isSpinning = false;
-    let spinVelocity = 0;
-    let spinFriction = 0.980; // Decelerazione (più basso = frena prima)
 
     // --- ELEMENTI DOM ---
     const namesInput = document.getElementById('names-input');
@@ -51,33 +64,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearBtn = document.getElementById('clear-btn');
     const shuffleBtn = document.getElementById('shuffle-btn');
     
-    // Elementi Modale Vincitore
     const winnerModal = document.getElementById('winner-modal');
     const winnerNameDisplay = document.getElementById('winner-name-display');
-    const closeXBtn = document.getElementById('close-winner-x');     // La X in alto
-    const closeModalBtn = document.getElementById('modal-close-btn'); // Bottone "Chiudi"
-    const removeWinnerBtn = document.getElementById('modal-remove-btn'); // Bottone "Rimuovi"
+    const closeXBtn = document.getElementById('close-winner-x');
+    const closeModalBtn = document.getElementById('modal-close-btn');
+    const removeWinnerBtn = document.getElementById('modal-remove-btn');
 
     // --- INIZIALIZZAZIONE ---
     function init() {
-        // Popola la textarea con i nomi iniziali
-        namesInput.value = names.join('\n');
+        namesInput.value = names.join('\\n');
         updateUI();
         drawWheel();
-        animate(); // Avvia il loop di animazione
+        animate(); // Avvia il loop
     }
 
-    // --- MOTORE GRAFICO (DRAW) ---
+    // --- MOTORE GRAFICO OTTIMIZZATO ---
     function drawWheel() {
         // Pulisci il canvas
         ctx.clearRect(0, 0, cw, ch);
 
-        // Caso: Nessun nome inserito
+        // Caso: Nessun nome
         if (names.length === 0) {
             ctx.save();
             ctx.beginPath();
             ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-            ctx.fillStyle = "#f5f5f5"; // Sfondo grigio vuoto
+            ctx.fillStyle = "#f5f5f5";
             ctx.fill();
             ctx.strokeStyle = "#e0e0e0";
             ctx.lineWidth = 2;
@@ -95,14 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const arcSize = (2 * Math.PI) / names.length;
 
         ctx.save();
-        ctx.translate(cx, cy);
+        // Sposta al centro LOGICO (300, 300) dato che abbiamo scalato il contesto
+        ctx.translate(300, 300);
         ctx.rotate(currentRotation);
 
+        // Disegna spicchi e testo
         names.forEach((name, i) => {
             const angle = i * arcSize;
             const color = colors[i % colors.length];
             
-            // 1. Disegna Spicchio
+            // 1. Spicchio
             ctx.beginPath();
             ctx.moveTo(0, 0);
             ctx.arc(0, 0, radius, angle, angle + arcSize);
@@ -110,195 +123,221 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.fillStyle = color;
             ctx.fill();
             
-            // Bordo bianco tra gli spicchi per pulizia visiva
+            // Bordo bianco
             ctx.lineWidth = 4;
             ctx.strokeStyle = "#ffffff";
             ctx.stroke();
 
-            // 2. Disegna Testo
+            // 2. Testo - OTTIMIZZATO
             ctx.save();
-            // Ruota per allineare il testo al centro dello spicchio
             ctx.rotate(angle + arcSize / 2);
             ctx.textAlign = "right";
             ctx.textBaseline = "middle";
             ctx.font = "bold 28px Outfit, sans-serif";
 
-            // LOGICA COLORE TESTO (Bianco vs Nero)
-            if (lightColors.includes(color)) {
-                ctx.fillStyle = "#1a1a1a"; // Nero per sfondi chiari
-                ctx.shadowColor = "transparent";
-            } else {
-                ctx.fillStyle = "#ffffff"; // Bianco per sfondi scuri
+            // Colore testo pre-calcolato
+            const textColor = lightColors.includes(color) ? "#1a1a1a" : "#ffffff";
+            ctx.fillStyle = textColor;
+
+            // Shadow solo per testo bianco (performance)
+            if (textColor === "#ffffff") {
                 ctx.shadowColor = "rgba(0,0,0,0.3)";
-                ctx.shadowBlur = 4;
+                ctx.shadowBlur = 3;
                 ctx.shadowOffsetX = 1;
                 ctx.shadowOffsetY = 1;
+            } else {
+                ctx.shadowColor = "transparent";
+                ctx.shadowBlur = 0;
             }
 
-            // TRONCAMENTO TESTO (Se > 14 caratteri)
-            let displayName = name;
-            if (name.length > 14) {
-                displayName = name.substring(0, 12) + "...";
-            }
-
-            // Disegna il testo leggermente staccato dal bordo esterno
+            // Tronca testo se necessario
+            const displayName = name.length > 14 ? name.substring(0, 12) + "..." : name;
             ctx.fillText(displayName, radius - 30, 0);
             ctx.restore();
         });
 
         ctx.restore();
 
-        // 3. Cerchio Centrale (Donut Style)
-        // Crea l'effetto "buco" al centro
+        // 3. Cerchio Centrale
         ctx.beginPath();
-        ctx.arc(cx, cy, 50, 0, 2 * Math.PI);
+        ctx.arc(300, 300, 50, 0, 2 * Math.PI);
         ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "transparent"; // Reset shadow
         ctx.fill();
-        // Ombra interna leggera
         ctx.shadowColor = "rgba(0,0,0,0.15)";
         ctx.shadowBlur = 10;
         ctx.stroke();
+        
+        // Reset shadow
+        ctx.shadowColor = "transparent";
+        ctx.shadowBlur = 0;
     }
 
-    // --- FISICA E ANIMAZIONE ---
+    // --- EASING FUNCTION MIGLIORATO ---
+    function easingCurve(velocity) {
+        const normalizedV = Math.abs(velocity) / initialVelocity;
+        
+        if (normalizedV > 0.7) {
+            return 0.985; // Slow friction all'inizio
+        } else if (normalizedV > 0.3) {
+            return 0.970; // Medium friction
+        } else {
+            return 0.945; // Fast friction = stop più naturale
+        }
+    }
+
+    // --- LOOP DI ANIMAZIONE OTTIMIZZATO ---
     function animate() {
         if (isSpinning) {
             currentRotation += spinVelocity;
-            spinVelocity *= spinFriction; // Applica attrito
-
-            // Condizione di arresto
-            if (spinVelocity < 0.002) {
+            
+            // Easing dinamico invece di friction statico
+            spinVelocity *= easingCurve(spinVelocity);
+            
+            needsRedraw = true;
+            
+            // Threshold più basso per stop smooth
+            if (Math.abs(spinVelocity) < 0.001) {
                 isSpinning = false;
                 spinVelocity = 0;
-                determineWinner();
+                needsRedraw = true;
+                
+                // Determina vincitore con piccolo delay per smoothness
+                setTimeout(() => determineWinner(), 100);
             }
         }
-        drawWheel(); // Ridisegna sempre
+        
+        // CRITICO: Ridisegna SOLO se necessario
+        if (needsRedraw) {
+            drawWheel();
+            needsRedraw = false;
+        }
+        
         requestAnimationFrame(animate);
     }
 
+    // --- TRIGGER SPIN MIGLIORATO ---
     function triggerSpin() {
         if (isSpinning || names.length === 0) return;
         
-        // Calcola una forza casuale
-        // Random tra 25 e 45 (velocità)
-        const baseSpeed = 25 + Math.random() * 20; 
-        spinVelocity = baseSpeed * 0.015; // Scala per i radianti
+        // Haptic feedback se supportato
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+        
+        // Velocità più varia per naturalezza
+        const baseSpeed = 30 + Math.random() * 25;
+        spinVelocity = baseSpeed * 0.018;
+        initialVelocity = spinVelocity; // Salva per easing
+        
         isSpinning = true;
+        needsRedraw = true;
     }
 
-    // Tap sulla ruota per girare
+    // Event listeners per spin
     canvas.addEventListener('click', triggerSpin);
-    // Supporto touch per mobile (spesso click basta, ma questo migliora la reattività)
     canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Evita doppio evento click
+        e.preventDefault();
         triggerSpin();
     }, {passive: false});
 
-    // --- LOGICA VINCITORE ---
+    // --- LOGICA VINCITORE (Invariata) ---
     function determineWinner() {
-        // La freccia è a ORE 3 (0 radianti in Canvas standard)
-        // Ma noi ruotiamo l'intero contesto.
-        
         const arcSize = (2 * Math.PI) / names.length;
-        
-        // Normalizza la rotazione tra 0 e 2PI
         let normalizedRotation = currentRotation % (2 * Math.PI);
         if (normalizedRotation < 0) normalizedRotation += 2 * Math.PI;
         
-        // Calcolo inverso: Quale spicchio tocca l'angolo 0?
-        // Formula: (2PI - rotazione) % 2PI
         let pointerAngle = (2 * Math.PI - normalizedRotation) % (2 * Math.PI);
-        
         const winningIndex = Math.floor(pointerAngle / arcSize);
         
-        // Controllo di sicurezza sull'indice
         if (winningIndex >= 0 && winningIndex < names.length) {
             const winnerName = names[winningIndex];
             showWinnerModal(winnerName);
         }
     }
 
-    // --- GESTIONE INTERFACCIA (UI) ---
+    // --- GESTIONE UI CON DEBOUNCING ---
     
-    // 1. Aggiornamento Live dalla Textarea
+    // Input con debouncing per performance
     namesInput.addEventListener('input', () => {
         const raw = namesInput.value;
-        // Filtra righe vuote
-        const newNames = raw.split('\n').map(n => n.trim()).filter(n => n.length > 0);
+        const newNames = raw.split('\\n').map(n => n.trim()).filter(n => n.length > 0);
         
         names = newNames;
         updateUI();
-        drawWheel();
+        
+        // Debounce redraw (150ms)
+        clearTimeout(inputTimeout);
+        inputTimeout = setTimeout(() => {
+            needsRedraw = true;
+        }, 150);
     });
 
-    // 2. Bottone Pulisci
+    // Bottone Pulisci
     clearBtn.addEventListener('click', () => {
         if(confirm("Vuoi cancellare tutti i nomi?")) {
             names = [];
             namesInput.value = "";
             updateUI();
-            drawWheel();
+            needsRedraw = true;
         }
     });
 
-    // 3. Bottone Shuffle (Mischia)
+    // Shuffle
     shuffleBtn.addEventListener('click', () => {
         if (names.length < 2) return;
-        // Algoritmo Fisher-Yates semplificato
         names.sort(() => Math.random() - 0.5);
-        namesInput.value = names.join('\n');
-        drawWheel();
+        namesInput.value = names.join('\\n');
+        needsRedraw = true;
     });
 
     function updateUI() {
         entriesCount.textContent = names.length;
-        // Disabilita shuffle se pochi nomi
-        if (names.length < 2) shuffleBtn.style.opacity = "0.5";
-        else shuffleBtn.style.opacity = "1";
+        shuffleBtn.style.opacity = names.length < 2 ? "0.5" : "1";
     }
 
-    // --- GESTIONE MODALE VINCITORE ---
+    // --- GESTIONE MODALE ---
     function showWinnerModal(name) {
         winnerNameDisplay.textContent = name;
         winnerModal.classList.remove('hidden');
-        // Qui potresti lanciare coriandoli JS se volessi
     }
 
     function hideWinnerModal() {
         winnerModal.classList.add('hidden');
     }
 
-    // Listener per chiusura modale
     closeXBtn.addEventListener('click', hideWinnerModal);
     closeModalBtn.addEventListener('click', hideWinnerModal);
 
-    // Listener per rimozione vincitore
     removeWinnerBtn.addEventListener('click', () => {
         const winner = winnerNameDisplay.textContent;
-        
-        // Rimuovi il nome dall'array
-        // Nota: Rimuove solo la prima occorrenza se ce ne sono doppi
         const index = names.indexOf(winner);
         if (index > -1) {
             names.splice(index, 1);
         }
         
-        // Aggiorna Textarea e UI
-        namesInput.value = names.join('\n');
+        namesInput.value = names.join('\\n');
         updateUI();
-        drawWheel();
-        
+        needsRedraw = true;
         hideWinnerModal();
     });
 
-    // Chiudi modale cliccando fuori dalla card (Overlay)
     winnerModal.addEventListener('click', (e) => {
         if (e.target === winnerModal) {
             hideWinnerModal();
         }
     });
 
-    // Avvio applicazione
+    // Resize handler con debouncing
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            setupCanvas();
+            needsRedraw = true;
+        }, 250);
+    });
+
+    // Avvio
     init();
 });

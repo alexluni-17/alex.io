@@ -252,21 +252,21 @@ body {
     /* Border subtle */
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     
-    /* Padding con safe-area */
-    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px;
+    /* Padding con safe-area - RIDOTTO PER MOBILE */
+    padding: calc(env(safe-area-inset-top) + 8px) 12px 8px 12px;
     
     /* Layout */
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 60px;
+    min-height: 52px; /* Ridotto da 60px */
 }
 
 /* Title centrato */
 .unified-header-title {
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* Ridotto da 1.5rem */
     letter-spacing: -0.5px;
     color: #1a1a1a;
     text-align: center;
@@ -632,18 +632,18 @@ body {
 }
 
 /* ==========================================================================
-   7. LOADER SYSTEM (PREMIUM MOBILE)
+   7. LOADER SYSTEM - Minimal & Modern
    ========================================================================== */
 .loader-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: #09090b; /* Deep black/zinc */
+    background: #ffffff; /* Clean white */
     z-index: 9999;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    transition: opacity 0.5s ease, visibility 0.5s;
+    transition: opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .loader-overlay.hidden {
@@ -652,56 +652,78 @@ body {
 }
 
 .loader-content {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
 }
 
-/* Container per effetto "Ring" attorno al logo */
+/* Remove old loader-ring */
 .loader-ring {
     position: relative;
-    width: 100px;
-    height: 100px;
+    width: auto;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .loader-ring::before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 3px solid transparent;
-    border-top-color: #ffffff;
-    border-right-color: #6c5ce7; /* Accent purple */
-    animation: spin 1.5s linear infinite;
+    display: none; /* Remove spinning ring */
 }
 
+/* Simple Logo Pulse */
 .loader-logo {
-    width: 60px; /* Più piccolo, dentro il ring */
-    height: 60px;
-    border-radius: 12px;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
     object-fit: cover;
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    animation: logoPulse 1.5s ease-in-out infinite;
 }
 
+@keyframes logoPulse {
+    0%, 100% { 
+        transform: scale(1); 
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(0.95); 
+        opacity: 0.85;
+    }
+}
+
+/* Minimal Text */
 .loader-text {
     font-family: 'Outfit', sans-serif;
     font-size: 1.2rem;
-    font-weight: 600;
-    color: #fff;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #fff, #6c5ce7, #fff);
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: shine 3s linear infinite;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 2px;
+    /* Remove gradient animation */
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+    animation: none;
+}
+
+/* Progress Bar (NEW) */
+.loader-progress {
+    width: 200px;
+    height: 3px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.loader-progress-bar {
+    height: 100%;
+    background: #1a1a1a;
+    width: 0%;
+    transition: width 0.3s ease;
+    border-radius: 10px;
 }
 
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -709,150 +731,214 @@ body {
 
 
 /* ==========================================================================
-   7. WHEEL OF FORTUNE (RUOTA) - MOBILE PREMIUM
+   7. WHEEL OF FORTUNE (RUOTA) - MOBILE PREMIUM OVERHAUL
    ========================================================================== */
-.wheel-wrapper {
+
+/* Main Page Layout - Full Height Fix */
+.ruota-page-layout {
+    height: 100dvh; /* Dynamic viewport height */
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 10px 20px 20px 20px;
+    padding-top: 52px; /* Header height */
+    padding-bottom: calc(70px + env(safe-area-inset-bottom)); /* Tabbar + safe area */
+    overflow: hidden; /* Prevent scrolling if possible */
+    background: #f0f2f5;
+}
+
+.ruota-content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    margin-top: 20px; /* Safety Margin from Header */
+    margin: 0 auto;
+    position: relative;
+    max-width: 600px; /* Tablet limit */
+}
+
+/* 1. Wheel Section - Takes available space & centers */
+.wheel-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    min-height: 0; /* Important for flex overflow */
 }
 
 .wheel-container {
     position: relative;
-    /* Mobile First Sizing */
-    width: 300px; 
-    height: 300px;
-    max-width: 85vw;
-    max-height: 85vw;
-    margin: 0 auto;
+    /* Responsive sizing logic: */
+    /* Use the smaller of width/height, minus padding */
+    width: min(85vw, 45vh); 
+    height: min(85vw, 45vh);
+    max-width: 400px;
+    max-height: 400px;
+    
     /* Soft premium shadow */
-    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+    filter: drop-shadow(0 12px 30px rgba(0,0,0,0.15));
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.wheel-container:active { transform: scale(0.98); }
+
+.wheel-container:active { transform: scale(0.97); }
 
 #wheelCanvas {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    /* White border for cleanliness */
     border: 4px solid #fff;
     box-sizing: border-box;
+    background: #fff;
 }
 
-/* POINTER - RIGHT SIDE pointing LEFT - Modern & Clean */
+/* Pointer - Modern Triangle */
 .wheel-pointer {
     position: absolute;
     top: 50%;
-    right: -12px;
+    right: -14px; /* Slightly outside */
     transform: translateY(-50%);
     width: 0; 
     height: 0; 
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-    border-right: 30px solid #1a1a1a; /* Matte Black Pointer */
-    filter: drop-shadow(-2px 2px 4px rgba(0,0,0,0.2));
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+    border-right: 32px solid #1a1a1a;
+    filter: drop-shadow(-2px 4px 6px rgba(0,0,0,0.2));
     z-index: 10;
 }
 
 .spin-indicator {
     position: absolute;
-    bottom: -18px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1a1a1a;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.8rem;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    /* Center Badge Style */
+    width: 60px; height: 60px;
+    background: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: #1a1a1a;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 4px solid rgba(240,240,240,0.5);
+    z-index: 5;
+    pointer-events: none; /* Let clicks pass to canvas */
     letter-spacing: 1px;
 }
 
-/* Controls - Centered & Premium */
+/* 2. Controls Section - Bottom Anchored */
+.controls-section {
+    padding: 0 16px 8px 16px;
+    background: transparent;
+    z-index: 20;
+}
+
 .wheel-controls {
-    width: 100%;
-    max-width: 340px; 
-    margin: 0 auto; /* CENTERED */
     background: #ffffff;
     border-radius: 20px;
-    padding: 20px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    padding: 16px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.05); /* Upward shadow */
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .controls-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 15px;
 }
+
 .controls-header h3 {
     margin: 0;
     font-size: 1rem;
     font-weight: 700;
     color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
 #entries-count {
-    background: #000;
+    background: #1a1a1a;
     color: #fff;
-    padding: 3px 10px;
-    border-radius: 20px;
+    padding: 2px 8px;
+    border-radius: 8px;
     font-size: 0.75rem;
     font-weight: 700;
 }
 
+.icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    border: none;
+    background: #f5f5f5;
+    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.icon-btn:active { background: #e0e0e0; transform: scale(0.95); }
+
+/* Input Area - Clean & Minimal */
+.input-area {
+    position: relative;
+    width: 100%;
+}
+
 #names-input {
     width: 100%;
-    padding: 12px;
+    padding: 12px 14px;
     border-radius: 12px;
     border: 2px solid #f0f0f0;
     font-family: 'Outfit', sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
-    resize: none; 
+    font-size: 0.95rem;
+    line-height: 1.4;
+    resize: none;
     outline: none;
-    margin-bottom: 15px;
     background: #f9f9f9;
-    color: #333;
+    color: #1a1a1a;
     transition: all 0.2s;
-    min-height: 120px;
+    height: 48px; /* Compact default */
+    min-height: 48px;
 }
+
 #names-input:focus {
-    border-color: #000;
+    border-color: #1a1a1a;
     background: #fff;
+    height: 100px; /* Auto expand on focus */
 }
 
 .action-buttons {
-    display: flex;
-    gap: 10px;
+    width: 100%;
 }
-.small-btn {
-    border: none;
-    background: #f0f0f0;
-    padding: 8px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 700;
-}
+
 .secondary-btn {
     width: 100%;
     padding: 12px;
     border-radius: 12px;
-    background: #f5f5f5;
-    border: none;
+    background: transparent;
+    border: 2px solid #ff4757;
     font-weight: 700;
-    color: #666;
+    font-size: 0.9rem;
+    color: #ff4757;
+    transition: all 0.2s;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.secondary-btn:active {
+    background: #fff0f1;
+    transform: scale(0.98);
 }
 
-/* Winner Modal - Redesigned & Compact */
+/* Winner Modal - Refined */
 .winner-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); 
+    background: rgba(0,0,0,0.65); 
     backdrop-filter: blur(8px);
     z-index: 3000;
     display: flex;
@@ -865,78 +951,89 @@ body {
 
 .winner-card {
     background: #fff;
-    width: 75%; max-width: 260px; /* Much smaller */
-    border-radius: 20px;
+    width: 85%; 
+    max-width: 320px;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     text-align: center;
-    animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
-    padding-top: 25px; /* Reduced top space */
+    padding: 24px 20px;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
 .winner-header {
-    background: transparent;
-    padding: 0;
-    color: #333;
-    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
 }
+
 .winner-header h3 { 
     margin: 0; 
-    font-size: 0.8rem; /* Smaller label */
+    font-size: 0.9rem;
     text-transform: uppercase; 
-    letter-spacing: 1.5px; 
+    letter-spacing: 2px; 
     color: #999; 
     font-weight: 700;
 }
 
 .close-winner {
-    position: absolute; top: 10px; right: 10px;
     background: #f5f5f5; border: none; color: #888;
-    width: 24px; height: 24px; border-radius: 50%;
+    width: 32px; height: 32px; border-radius: 50%;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
     transition: background 0.2s;
-    font-size: 1rem; line-height: 1;
 }
-.close-winner:hover { background: #e0e0e0; }
+.close-winner:hover { background: #e0e0e0; color: #333; }
 
-.winner-body { padding: 0 20px 20px 20px; }
+.winner-body { display: flex; flex-direction: column; gap: 20px; }
+
 .winner-name {
-    font-size: 1.8rem; /* Reduced */
+    font-size: 2rem;
     font-weight: 800;
     color: #1a1a1a;
-    margin: 5px 0 20px 0; /* Tighter margins */
     line-height: 1.1;
     word-break: break-word;
-}
-.winner-actions {
-    display: flex; 
-    flex-direction: column; 
-    gap: 8px; /* Tighter gap */
+    background: linear-gradient(45deg, #1a1a1a, #4a4a4a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 10px 0;
 }
 
-/* Modal Buttons - Compact */
+.winner-actions {
+    display: grid; 
+    grid-template-columns: 1fr 1fr;
+    gap: 12px; 
+}
+
 #modal-close-btn { 
-    width: 100%; 
-    background: #2f3542; 
-    color: #fff; 
-    padding: 10px; /* Slimmer */
-    border-radius: 10px;
+    background: #f0f0f0; 
+    color: #1a1a1a; 
+    padding: 12px;
+    border-radius: 12px;
     font-weight: 700; border: none;
     font-size: 0.9rem;
     cursor: pointer;
 }
 #modal-remove-btn { 
-    width: 100%; 
-    background: #fff; 
-    color: #ff4757; 
-    border: 2px solid #ff4757; 
-    padding: 8px; /* Slimmer */
-    border-radius: 10px;
+    background: #1a1a1a; 
+    color: #fff; 
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
     font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }    
+
 /* ==========================================================================
    5. MODERN HOME REDESIGN (AROBIX Style)
    ========================================================================== */
@@ -946,12 +1043,11 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px; /* Reduced H & Padding */
+    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px;
     background: #ffffff;
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 50;
-    /* No shadow initially for clean look */
 }
 
 .modern-header .logo-area {
@@ -961,7 +1057,7 @@ body {
 }
 
 .modern-header .header-logo {
-    height: 48px; /* Slightly smaller for compactness */
+    height: 48px;
     width: 48px;
     border-radius: 50%;
     object-fit: cover;
@@ -974,11 +1070,10 @@ body {
 .modern-header .app-name-text {
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1.6rem; /* Slightly smaller */
+    font-size: 1.6rem;
     color: #1a1a1a;
     letter-spacing: -1px; 
     text-transform: uppercase;
-    /* Absolute Center */
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -986,15 +1081,15 @@ body {
 }
 
 .modern-header .notif-btn {
-    width: 42px; /* Slightly smaller */
+    width: 42px;
     height: 42px;
     border-radius: 50%;
     border: none; 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #000000; /* Black Background */
-    color: #ffffff; /* White Icon */
+    background: #000000;
+    color: #ffffff;
     position: relative;
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
@@ -1011,7 +1106,7 @@ body {
 /* Modern Hero Banner */
 .hero-banner {
     margin: 0 8px 30px 8px;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%); /* Subtle Gradient */
+    background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
     border-radius: 28px;
     padding: 30px 24px;
     display: flex;
@@ -1020,8 +1115,8 @@ body {
     position: relative;
     overflow: hidden;
     min-height: 180px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Stronger Shadow */
-    border: 2px solid #ffffff; /* White border for pop */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 2px solid #ffffff;
 }
 
 .hero-content {
@@ -1061,13 +1156,13 @@ body {
     position: absolute;
     right: -20px;
     bottom: -10px;
-    width: 60%; /* Slightly bigger */
+    width: 60%;
     height: auto;
     object-fit: contain;
     z-index: 1;
     transform: rotate(-5deg); 
-    mix-blend-mode: multiply; /* Hides white background square */
-    filter: contrast(1.1) saturate(1.1); /* Pop colors */
+    mix-blend-mode: multiply;
+    filter: contrast(1.1) saturate(1.1);
 }
 
 /* Categories Scroll - Story Style */
@@ -1081,7 +1176,7 @@ body {
     gap: 15px;
     overflow-x: auto;
     padding-bottom: 5px; 
-    padding-left: 5px; /* Space for shadow */
+    padding-left: 5px;
     scrollbar-width: none; 
 }
 .cat-scroll::-webkit-scrollbar { display: none; }
@@ -1099,10 +1194,9 @@ body {
 .cat-icon-box {
     width: 68px;
     height: 68px;
-    border-radius: 24px; /* Squared/Squircle */
-    /* Instagram Gradient Ring */
+    border-radius: 24px;
     background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    padding: 3px; /* Thickness of the ring */
+    padding: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1116,14 +1210,14 @@ body {
 .cat-img {
     width: 100%;
     height: 100%;
-    border-radius: 20px; /* Matching inner radius */
-    border: 3px solid #fff; /* White space between ring and image */
+    border-radius: 20px;
+    border: 3px solid #fff;
     object-fit: cover;
     background: #fff;
 }
 
 .cat-label {
-    display: none; /* Hide labels as requested */
+    display: none;
 }
 
 /* Section Head */
@@ -1216,4 +1310,28 @@ body {
 .card-price {
     font-weight: 700;
     color: #1a1a1a;
+}
+
+/* ==========================================================================
+   RESPONSIVE MOBILE BREAKPOINTS - RUOTA.HTML OPTIMIZATIONS
+   ========================================================================== */
+
+/* --- MEDIA QUERIES FOR SMALLER DEVICES --- */
+@media screen and (max-width: 375px) {
+    .wheel-container {
+        width: min(90vw, 40vh);
+        height: min(90vw, 40vh);
+    }
+    .winner-name { font-size: 1.8rem; }
+    .controls-section { padding-bottom: 4px; }
+}
+
+@media screen and (max-height: 600px) {
+    /* Short screens */
+    .wheel-container {
+        width: 35vh; height: 35vh;
+    }
+    .ruota-page-layout {
+        padding-top: 48px;
+    }
 }

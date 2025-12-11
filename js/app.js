@@ -14,51 +14,79 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================================
-// 0. LOADER SYSTEM
+// 0. LOADER SYSTEM - Optimized with Progress
 // ============================================================
 function initLoader() {
     const loader = document.getElementById('app-loader');
+    const progressBar = document.querySelector('.loader-progress-bar');
     if (!loader) return;
 
-    // Tempo minimo di visualizzazione (per evitare flash troppo rapidi)
-    const minLoadTime = new Promise(resolve => setTimeout(resolve, 1500));
+    const startTime = Date.now();
+    let progress = 0;
+    
+    const updateProgress = (value) => {
+        progress = Math.min(100, value);
+        if (progressBar) progressBar.style.width = `${progress}%`;
+    };
 
-    // Promise che attende le immagini O un timeout di sicurezza (es. 5s)
-    const imagesPromise = new Promise(resolve => {
-        const images = Array.from(document.querySelectorAll('img'));
-        const validImages = images.filter(img => img.src && !img.complete);
+    // Fase 1: DOM Ready (instant)
+    updateProgress(20);
 
-        if (validImages.length === 0) {
-            resolve(); 
-            return;
-        }
+    // Fase 2: Fonts Loading
+    if (document.fonts) {
+        document.fonts.ready.then(() => updateProgress(40));
+    } else {
+        setTimeout(() => updateProgress(40), 200);
+    }
 
-        let loadedCount = 0;
-        const total = validImages.length;
-        const checkDone = () => {
-            loadedCount++;
-            if (loadedCount === total) resolve();
+    // Fase 3: Images Loading
+    const images = Array.from(document.querySelectorAll('img'));
+    const validImages = images.filter(img => img.src && !img.complete);
+    
+    if (validImages.length === 0) {
+        updateProgress(80);
+        finishLoading();
+    } else {
+        let loadedImages = 0;
+        const imageProgress = 40; // Da 40 a 80 = 40% range
+        
+        const onImageLoad = () => {
+            loadedImages++;
+            const imgPercent = (loadedImages / validImages.length) * imageProgress;
+            updateProgress(40 + imgPercent);
+            
+            if (loadedImages === validImages.length) {
+                finishLoading();
+            }
         };
-
+        
         validImages.forEach(img => {
-            img.onload = checkDone;
-            img.onerror = checkDone; 
+            if (img.complete) {
+                onImageLoad();
+            } else {
+                img.addEventListener('load', onImageLoad);
+                img.addEventListener('error', onImageLoad);
+            }
         });
-    });
-
-    // Timeout di sicurezza: se le immagini non caricano entro 5 secondi, sblocca comunque
-    const safetyTimeout = new Promise(resolve => setTimeout(resolve, 5000));
-
-    // Vinci chi arriva prima tra ImmaginiComplete e TimeoutSicurezza
-    const resourceLoading = Promise.race([imagesPromise, safetyTimeout]);
-
-    // Attendi sia il tempo minimo (1.5s) SIA il caricamento (o timeout 5s)
-    Promise.all([minLoadTime, resourceLoading]).then(() => {
-        loader.classList.add('hidden');
+        
+        // Safety timeout ridotto a 3s (da 5s)
         setTimeout(() => {
-             loader.style.display = 'none';
-        }, 500);
-    });
+            if (progress < 80) finishLoading();
+        }, 3000);
+    }
+
+    function finishLoading() {
+        updateProgress(100);
+        
+        // Minimo 800ms per smooth experience (ridotto da 1500ms)
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(0, 800 - elapsed);
+        
+        setTimeout(() => {
+            loader.classList.add('hidden');
+            setTimeout(() => loader.style.display = 'none', 400);
+        }, delay);
+    }
 }
 
 // ============================================================
