@@ -635,3 +635,266 @@ body {
 
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 @keyframes shine { to { background-position: 200% center; } }
+
+
+/* ==========================================================================
+   5. MODERN HOME REDESIGN (AROBIX Style)
+   ========================================================================== */
+
+/* Modern Header */
+.modern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(env(safe-area-inset-top) + 15px) 24px 15px 24px;
+    background: #ffffff;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    /* No shadow initially for clean look */
+}
+
+.modern-header .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modern-header .header-logo {
+    height: 32px; /* Adjusted size */
+    width: auto;
+}
+
+.modern-header .app-name-text {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #000;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+}
+
+.modern-header .notif-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 1px solid #f0f0f0; /* Thin border */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #000;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.modern-header .notif-dot {
+    position: absolute;
+    top: 10px; right: 12px;
+    width: 8px; height: 8px;
+    background: #ff3b30;
+    border: 1px solid #fff;
+    border-radius: 50%;
+}
+
+/* Modern Hero Banner */
+.hero-banner {
+    margin: 20px 24px 30px 24px;
+    background-color: #f2f4f6; /* Light grey background */
+    border-radius: 28px;
+    padding: 30px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    min-height: 180px;
+}
+
+.hero-content {
+    z-index: 2;
+    flex: 1;
+    max-width: 60%;
+}
+
+.hero-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.hero-subtitle {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+
+.hero-btn {
+    background: #000;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.hero-image {
+    position: absolute;
+    right: -20px;
+    bottom: -10px;
+    width: 55%;
+    height: auto;
+    object-fit: contain;
+    z-index: 1;
+    transform: rotate(-5deg); /* Slight dynamic angle */
+}
+
+/* Categories Scroll */
+.category-section {
+    padding: 0 24px;
+    margin-bottom: 35px;
+}
+
+.cat-scroll {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 5px; 
+    scrollbar-width: none; 
+}
+.cat-scroll::-webkit-scrollbar { display: none; }
+
+.cat-item {
+    min-width: 72px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.cat-icon-box {
+    width: 68px;
+    height: 68px;
+    border-radius: 22px;
+    border: 1px solid #efefef;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: #333;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.cat-item.active .cat-icon-box {
+    background: #1a1a1a;
+    color: #fff;
+    border-color: #1a1a1a;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.cat-label {
+    font-size: 0.8rem;
+    color: #555;
+    font-weight: 600;
+}
+
+/* Section Head */
+.section-header-modern {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; 
+    padding: 0 24px;
+    margin-bottom: 20px;
+}
+
+.section-header-modern h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.section-header-modern .see-all {
+    font-size: 0.9rem;
+    color: #888;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+/* Modern Grid */
+.modern-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 0 24px 110px 24px; 
+}
+
+.modern-card {
+    background: #f8f9fa; 
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.card-image-area {
+    width: 100%;
+    aspect-ratio: 1/1.1; 
+    background: #ececec;
+    position: relative;
+}
+
+.card-image-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-badge {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: #ff4757; 
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.card-info {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 6px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-meta {
+    font-size: 0.85rem;
+    color: #777;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-price {
+    font-weight: 700;
+    color: #1a1a1a;
+}

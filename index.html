@@ -20,99 +20,116 @@
         </div>
     </div>
 
-    <main id="app">
+    <main id="app" style="padding-top: 100px;">
         
-        <!-- HEADER -->
-        <header class="top-header fade-in">
-            <div class="header-left">
-                <!-- User Logo / Avatar -->
-                <img src="logo.png" onerror="this.src='https://source.unsplash.com/random/100x100?logo,icon'" class="app-logo" alt="Logo">
-                <div class="greeting">
-                    Bentornato,
-                    <span>Alex..!!</span>
-                </div>
+        <!-- MODERN HEADER -->
+        <header class="modern-header">
+            <div class="logo-area">
+                <img src="logo.png" onerror="this.src='https://source.unsplash.com/random/100x100?logo'" class="header-logo" alt="Logo">
+                <span class="app-name-text">ALEX.IO</span>
             </div>
             
-            <div class="action-btn">
+            <div class="notif-btn">
                 <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
                 <div class="notif-dot"></div>
             </div>
         </header>
 
-        <!-- HORIZONTAL STATS (Your Progress) -->
-
-        <div class="stats-grid fade-in">
-            <!-- Card 1: Livello (Trophy) -->
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
-                </div>
-                <span class="stat-value">12</span>
-                <span class="stat-label">Livello</span>
+        <!-- HERO BANNER -->
+        <div class="hero-banner fade-in">
+            <div class="hero-content">
+                <div class="hero-title">Play & <br>Win Big</div>
+                <div class="hero-subtitle">Unisciti ai tornei giornalieri</div>
+                <a href="giochi.html" class="hero-btn">Gioca Ora</a>
             </div>
-            <!-- Card 2: Rank (Medal) -->
-            <div class="stat-card">
-                 <div class="stat-icon-wrapper">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
-                 </div>
-                 <span class="stat-value">1550</span>
-                 <span class="stat-label">Rank Gold</span>
-            </div>
-            <!-- Card 3: Vittorie (Star/Award) -->
-            <div class="stat-card">
-                 <div class="stat-icon-wrapper">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-                 </div>
-                 <span class="stat-value">504</span>
-                 <span class="stat-label">Vittorie</span>
-            </div>
-            <!-- Card 4: Strike (Fire) -->
-            <div class="stat-card">
-                <div class="stat-icon-wrapper">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ff7675" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-2.246-3.7-2.618-5.5C11 3.5 12 3 13 3a1.5 1.5 0 0 1 1 1.5c0 1 .5 1.5 1 2.5.5 1 .917 2.15 1.458 3.5h0C18.667 12.333 19 14 19 16a6 6 0 1 1-12 0c0-1.5.5-2.5 1.5-1.5Z"></path></svg>
-                </div>
-                <span class="stat-value">15</span>
-                <span class="stat-label">Strike</span>
-           </div>
+            <img src="https://source.unsplash.com/random/500x500?3d,character,game" class="hero-image" alt="Hero Game">
         </div>
 
-        <!-- VERTICAL CARDS (Weeks complete -> Games/Tournaments) -->
-        <div class="section-header fade-in" style="margin-top: 10px;">
-            <h2>Games</h2>
-            <a href="giochi.html" class="view-all">Vedi tutti</a>
+        <!-- CATEGORIES -->
+        <div class="category-section fade-in" style="animation-delay: 0.1s">
+            <div class="cat-scroll">
+                <a href="#" class="cat-item active">
+                    <div class="cat-icon-box">🔥</div>
+                    <span class="cat-label">Top</span>
+                </a>
+                <a href="#" class="cat-item">
+                    <div class="cat-icon-box">🎮</div>
+                    <span class="cat-label">Arcade</span>
+                </a>
+                <a href="#" class="cat-item">
+                    <div class="cat-icon-box">🎰</div>
+                    <span class="cat-label">Slots</span>
+                </a>
+                <a href="#" class="cat-item">
+                    <div class="cat-icon-box">🃏</div>
+                    <span class="cat-label">Card</span>
+                </a>
+                <a href="#" class="cat-item">
+                    <div class="cat-icon-box">🎲</div>
+                    <span class="cat-label">Table</span>
+                </a>
+            </div>
         </div>
 
-        <div class="big-card-grid fade-in">
-            <!-- Big Card 1 -->
-            <div class="big-card"> 
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80" alt="Esports">
-                <div class="big-card-content">
-                    <h3>Torneo Pro</h3>
-                    <p>Inizia tra 20 min</p>
+        <!-- FEATURED GAMES GRID -->
+        <div class="section-header-modern fade-in" style="animation-delay: 0.2s">
+            <h3>Nuovi Arrivi</h3>
+            <a href="giochi.html" class="see-all">Vedi tutti</a>
+        </div>
+
+        <div class="modern-grid fade-in" style="animation-delay: 0.3s">
+            <!-- Card 1 -->
+            <div class="modern-card">
+                <div class="card-image-area">
+                    <div class="card-badge">HOT</div>
+                    <img src="https://source.unsplash.com/random/400x400?cyberpunk" alt="Game">
+                </div>
+                <div class="card-info">
+                    <h4 class="card-title">Cyber Poker</h4>
+                    <div class="card-meta">
+                        <span>Card</span>
+                        <span class="card-price">€100+</span>
+                    </div>
                 </div>
             </div>
-            <!-- Big Card 2 -->
-            <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80" alt="Retro">
-                <div class="big-card-content">
-                    <h3>Sfida Live</h3>
-                    <p>12 amici online</p>
+            <!-- Card 2 -->
+            <div class="modern-card">
+                <div class="card-image-area">
+                    <div class="card-badge">NEW</div>
+                    <img src="https://source.unsplash.com/random/400x400?racing" alt="Game">
+                </div>
+                <div class="card-info">
+                    <h4 class="card-title">Neon Racer</h4>
+                    <div class="card-meta">
+                        <span>Arcade</span>
+                        <span class="card-price">Free</span>
+                    </div>
                 </div>
             </div>
-             <!-- Big Card 3 -->
-             <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80" alt="Arcade">
-                <div class="big-card-content">
-                    <h3>Arcade</h3>
-                    <p>Modalità Infinita</p>
+            <!-- Card 3 -->
+            <div class="modern-card">
+                <div class="card-image-area">
+                    <img src="https://source.unsplash.com/random/400x400?space" alt="Game">
+                </div>
+                <div class="card-info">
+                    <h4 class="card-title">Star Fleet</h4>
+                    <div class="card-meta">
+                        <span>Strategy</span>
+                        <span class="card-price">€25</span>
+                    </div>
                 </div>
             </div>
-             <!-- Big Card 4 -->
-             <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80" alt="VR">
-                <div class="big-card-content">
-                    <h3>VR World</h3>
-                    <p>Nuova Mappa</p>
+            <!-- Card 4 -->
+            <div class="modern-card">
+                <div class="card-image-area">
+                    <img src="https://source.unsplash.com/random/400x400?fantasy" alt="Game">
+                </div>
+                <div class="card-info">
+                    <h4 class="card-title">Mystic RPG</h4>
+                    <div class="card-meta">
+                        <span>RPG</span>
+                        <span class="card-price">€50</span>
+                    </div>
                 </div>
             </div>
         </div>
