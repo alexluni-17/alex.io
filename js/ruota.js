@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const lightColors = ['#0BE881', '#FFC048', '#17c0eb', '#ffb8b8', '#fff200'];
 
     // --- ELEMENTI DOM ---
-    const namesInput = document.getElementById('names-input');
-    const entriesCount = document.getElementById('entries-count');
+    // const namesInput = document.getElementById('names-input'); (REMOVED)
+    // const entriesCount = document.getElementById('entries-count'); (REMOVED)
     const clearBtn = document.getElementById('clear-btn');
     const shuffleBtn = document.getElementById('shuffle-btn');
     
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INIZIALIZZAZIONE ---
     function init() {
-        namesInput.value = names.join('\\n');
+        namesInput.value = names.join('\n'); // Use actual newlines
         updateUI();
         drawWheel();
         animate(); // Avvia il loop
@@ -256,47 +256,117 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- GESTIONE UI CON DEBOUNCING ---
+    // --- GESTIONE UI ---
+    // (Input listener rimosso - ora gestito dal tasto Salva nel modale)
+
+    // --- ELEMENTI DOM NEW MODAL ---
+    const openManageBtn = document.getElementById('open-manage-modal');
+    const entriesCountBtn = document.getElementById('entries-count-btn');
     
-    // Input con debouncing per performance
-    namesInput.addEventListener('input', () => {
-        const raw = namesInput.value;
-        const newNames = raw.split('\\n').map(n => n.trim()).filter(n => n.length > 0);
-        
-        names = newNames;
-        updateUI();
-        
-        // Debounce redraw (150ms)
-        clearTimeout(inputTimeout);
-        inputTimeout = setTimeout(() => {
-            needsRedraw = true;
-        }, 150);
-    });
+    const manageModal = document.getElementById('manage-modal');
+    const closeManageX = document.getElementById('close-manage-x');
+    const saveCloseBtn = document.getElementById('save-close-btn');
+    
+    const newNameInput = document.getElementById('new-name-input');
+    const addNameBtn = document.getElementById('add-name-btn');
+    const namesListEl = document.getElementById('names-list');
+    
+    // Temp names array for editing
+    let tempNames = [];
 
-    // Bottone Pulisci
-    clearBtn.addEventListener('click', () => {
-        if(confirm("Vuoi cancellare tutti i nomi?")) {
-            names = [];
-            namesInput.value = "";
-            updateUI();
-            needsRedraw = true;
+    // --- GESTIONE MANAGE MODAL ---
+    function openManageModal() {
+        tempNames = [...names]; // Clone array
+        renderNamesList();
+        manageModal.classList.remove('hidden');
+        newNameInput.focus();
+    }
+    
+    function closeManageModal() {
+        manageModal.classList.add('hidden');
+    }
+    
+    // Render List
+    function renderNamesList() {
+        namesListEl.innerHTML = '';
+        tempNames.forEach((name, index) => {
+            const li = document.createElement('li');
+            li.className = 'name-item';
+            
+            const span = document.createElement('span');
+            span.textContent = name;
+            
+            const delBtn = document.createElement('button');
+            delBtn.className = 'delete-item-btn';
+            delBtn.innerHTML = '&times;'; // X symbo
+            delBtn.onclick = () => removeTempName(index);
+            
+            li.appendChild(span);
+            li.appendChild(delBtn);
+            namesListEl.appendChild(li);
+        });
+        
+        // Auto scroll to bottom
+        namesListEl.scrollTop = namesListEl.scrollHeight;
+    }
+
+    function addTempName() {
+        const val = newNameInput.value.trim();
+        if (val) {
+            tempNames.push(val);
+            newNameInput.value = '';
+            renderNamesList();
+            newNameInput.focus();
         }
+    }
+
+    function removeTempName(index) {
+        tempNames.splice(index, 1);
+        renderNamesList();
+    }
+    
+    // Save logic
+    function saveAndClose() {
+        names = [...tempNames]; // Apply changes
+        updateUI();
+        needsRedraw = true; 
+        closeManageModal();
+    }
+
+    // Input Enter Key
+    newNameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') addTempName();
     });
 
-    // Shuffle
+    addNameBtn.addEventListener('click', addTempName);
+    openManageBtn.addEventListener('click', openManageModal);
+    closeManageX.addEventListener('click', closeManageModal);
+    saveCloseBtn.addEventListener('click', saveAndClose);
+    
+    // Chiudi modale cliccando fuori
+    manageModal.addEventListener('click', (e) => {
+        if (e.target === manageModal) closeManageModal();
+    });
+
+    // Button Listeners all'interno del modale
+    clearBtn.addEventListener('click', () => {
+        // No confirmation needed as per user request
+        tempNames = [];
+        renderNamesList();
+        newNameInput.focus();
+    });
+
     shuffleBtn.addEventListener('click', () => {
-        if (names.length < 2) return;
-        names.sort(() => Math.random() - 0.5);
-        namesInput.value = names.join('\\n');
-        needsRedraw = true;
+        if (tempNames.length < 2) return;
+        tempNames.sort(() => Math.random() - 0.5);
+        renderNamesList();
     });
 
     function updateUI() {
-        entriesCount.textContent = names.length;
-        shuffleBtn.style.opacity = names.length < 2 ? "0.5" : "1";
+        entriesCountBtn.textContent = names.length;
     }
 
-    // --- GESTIONE MODALE ---
+    // --- GESTIONE VINCITORE MODALE (Invariata) ---
     function showWinnerModal(name) {
         winnerNameDisplay.textContent = name;
         winnerModal.classList.remove('hidden');
@@ -315,8 +385,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (index > -1) {
             names.splice(index, 1);
         }
-        
-        namesInput.value = names.join('\\n');
         updateUI();
         needsRedraw = true;
         hideWinnerModal();
