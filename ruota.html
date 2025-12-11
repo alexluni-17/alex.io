@@ -41,17 +41,57 @@
         </div>
     </div>
 
-    <main id="app" style="padding-top: 120px;">
-        <header class="page-header">
-            <h2>Ruota della Fortuna</h2>
+    <main id="app" style="padding-top: 130px; padding-bottom: 100px;">
+        <!-- MODERN HEADER (Sized like Home, Content Specific) -->
+        <header class="modern-header" style="justify-content: center;">
+            <h2 style="margin:0; font-size:1.5rem; color:#1a1a1a;">Ruota</h2>
         </header>
 
-        <!-- Placeholder Content -->
-        <div style="text-align: center; padding: 40px;">
-            <div style="font-size: 4rem; margin-bottom: 20px;">🎡</div>
-            <p>Gira la ruota e vinci!</p>
+        <!-- WHEEL AREA -->
+        <div class="wheel-wrapper">
+            <div class="wheel-container" style="cursor: pointer;">
+                <canvas id="wheelCanvas" width="600" height="600"></canvas>
+                <!-- Pointer exactly at RIGHT (3 o'clock) -->
+                <div class="wheel-pointer"></div>
+            </div>
+            
+            <button id="spin-btn" class="spin-button">GIRA LA RUOTA</button>
+        </div>
+
+        <!-- CONTROLS AREA -->
+        <div class="wheel-controls">
+            <div class="controls-header">
+                <h3>Partecipanti <span id="entries-count" style="background:#ddd; padding:2px 8px; border-radius:12px; font-size:0.8rem;">0</span></h3>
+                <button id="shuffle-btn" class="small-btn">🔀 Shuffle</button>
+            </div>
+            
+            <textarea id="names-input" placeholder="Scrivi i nomi qui..." rows="4"></textarea>
+            
+            <div class="action-buttons">
+                <!-- Update Button Removed for Live Edit -->
+                <button id="clear-btn" class="secondary-btn" style="width:100%">Pulisci tutto</button>
+            </div>
         </div>
     </main>
+
+    <!-- WINNER MODAL -->
+    <div id="winner-modal" class="winner-overlay hidden">
+        <div class="winner-card">
+            <div class="winner-header">
+                <h3>Vincitore!</h3>
+                <button class="close-winner" id="close-winner-x">&times;</button>
+            </div>
+            <div class="winner-body">
+                <div class="winner-name" id="winner-name-display">Nome Vincitore</div>
+                <div class="winner-actions">
+                    <button id="modal-close-btn" class="secondary-btn">Chiudi</button>
+                    <button id="modal-remove-btn" class="danger-btn">Rimuovi</button>
+                </div>
+            </div>
+            <!-- Confetti Container -->
+            <canvas id="confetti-canvas"></canvas>
+        </div>
+    </div>
 
     <!-- Bottom Navigation -->
      <nav class="tab-bar">
@@ -89,5 +129,6 @@
     </nav>
     
     <script src="js/app.js"></script>
+    <script src="js/ruota.js"></script>
 </body>
 </html>

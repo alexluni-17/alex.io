@@ -619,6 +619,165 @@ body {
 
 
 /* ==========================================================================
+   7. WHEEL OF FORTUNE (RUOTA) - MOBILE PREMIUM
+   ========================================================================== */
+.wheel-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 20px 20px 20px;
+    width: 100%;
+    margin-top: 20px; /* Safety Margin from Header */
+}
+
+.wheel-container {
+    position: relative;
+    /* Mobile First Sizing */
+    width: 300px; 
+    height: 300px;
+    max-width: 85vw;
+    max-height: 85vw;
+    margin: 0 auto;
+    /* Soft premium shadow */
+    filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#wheelCanvas {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* White border for cleanliness */
+    border: 4px solid #fff;
+    box-sizing: border-box;
+}
+
+/* POINTER - RIGHT SIDE pointing LEFT - Modern & Clean */
+.wheel-pointer {
+    position: absolute;
+    top: 50%;
+    right: -12px;
+    transform: translateY(-50%);
+    width: 0; 
+    height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 30px solid #1a1a1a; /* Matte Black Pointer */
+    filter: drop-shadow(-2px 2px 4px rgba(0,0,0,0.2));
+    z-index: 10;
+}
+
+/* Controls - Compact & Premium */
+.wheel-controls {
+    width: 100%;
+    max-width: 360px; /* Reduced width */
+    background: #fff;
+    border-radius: 20px;
+    padding: 15px; /* Reduced padding */
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.controls-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.controls-header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+#entries-count {
+    background: #f0f2f5;
+    color: #666;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+#names-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    resize: none; 
+    outline: none;
+    margin-bottom: 10px;
+    background: #fcfcfc;
+    color: #333;
+    transition: all 0.2s;
+}
+#names-input:focus {
+    border-color: #000;
+    background: #fff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+/* Winner Modal - Smaller Proportion */
+.winner-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255,255,255,0.8); 
+    backdrop-filter: blur(15px);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+}
+.winner-overlay:not(.hidden) { opacity: 1; pointer-events: auto; }
+
+.winner-card {
+    background: #fff;
+    width: 80%; max-width: 280px; /* Significantly smaller */
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px -10px rgba(0,0,0,0.2);
+    text-align: center;
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.winner-header {
+    background: #ff4757; 
+    padding: 15px; /* Reduced */
+    color: #fff;
+}
+.winner-header h3 { margin: 0; font-size: 1.2rem; font-weight: 700; }
+.close-winner {
+    position: absolute; top: 10px; right: 10px;
+    background: rgba(255,255,255,0.2); border: none; color: #fff;
+    width: 28px; height: 28px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+.winner-body { padding: 20px 15px; }
+.winner-name {
+    font-size: 2rem; /* Reduced from 2.8rem */
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    word-break: break-word;
+}
+.winner-actions {
+    display: flex; gap: 10px; justify-content: center;
+}    
+/* ==========================================================================
    5. MODERN HOME REDESIGN (AROBIX Style)
    ========================================================================== */
 
