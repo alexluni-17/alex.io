@@ -42,7 +42,7 @@ body {
 /* Fix sovrapposizione header */
 /* Fix sovrapposizione header */
 #app {
-    padding-top: 120px; /* Default for pages with simple header */
+    padding-top: 20px; /* Extreme vertical shift as requested */
 }
 /* Override for Home which has bigger header if needed, but 120px is safe start */
 
@@ -235,8 +235,8 @@ body {
 }
 /* Spacer for fixed headers */
 #app {
-    /* Header Header height approx 110px now */
-    padding-top: 120px; 
+    /* Header Header height reduced */
+    padding-top: 20px; 
 }
 .section-header h2 { 
     font-size: 1.4rem; 
@@ -609,7 +609,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: calc(env(safe-area-inset-top) + 15px) 8px 15px 8px;
+    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px; /* Reduced H & Padding */
     background: #ffffff;
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -624,8 +624,8 @@ body {
 }
 
 .modern-header .header-logo {
-    height: 54px; /* Big & Bold */
-    width: 54px;
+    height: 48px; /* Slightly smaller for compactness */
+    width: 48px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid #f0f0f0;
@@ -637,7 +637,7 @@ body {
 .modern-header .app-name-text {
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
-    font-size: 1.8rem; /* Larger */
+    font-size: 1.6rem; /* Slightly smaller */
     color: #1a1a1a;
     letter-spacing: -1px; 
     text-transform: uppercase;
@@ -649,17 +649,17 @@ body {
 }
 
 .modern-header .notif-btn {
-    width: 45px;
-    height: 45px;
+    width: 42px; /* Slightly smaller */
+    height: 42px;
     border-radius: 50%;
-    border: 1px solid #f0f0f0; /* Thin border */
+    border: none; 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #fff;
-    color: #000;
+    background: #000000; /* Black Background */
+    color: #ffffff; /* White Icon */
     position: relative;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .modern-header .notif-dot {
@@ -673,7 +673,7 @@ body {
 
 /* Modern Hero Banner */
 .hero-banner {
-    margin: 20px 8px 30px 8px;
+    margin: 0 8px 30px 8px;
     background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%); /* Subtle Gradient */
     border-radius: 28px;
     padding: 30px 24px;
