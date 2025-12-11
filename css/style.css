@@ -231,6 +231,74 @@ body {
 /* ==========================================================================
    4. CONTENUTO PRINCIPALE & Headings
    ========================================================================== */
+
+/* ==========================================================================
+   UNIFIED HEADER SYSTEM - Glassmorphism Design
+   ========================================================================== */
+
+/* Base Header Unified */
+.unified-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    
+    /* Glassmorphism Effect */
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    
+    /* Border subtle */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    
+    /* Padding con safe-area */
+    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px;
+    
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+}
+
+/* Title centrato */
+.unified-header-title {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.5px;
+    color: #1a1a1a;
+    text-align: center;
+    margin: 0;
+}
+
+/* Variante con back button (per giochi.html) */
+.unified-header.with-back {
+    justify-content: space-between;
+}
+
+.unified-header-back {
+    font-size: 1.5rem;
+    color: #1a1a1a;
+    text-decoration: none;
+    padding: 0 8px;
+    min-width: 40px;
+    transition: transform 0.2s ease;
+}
+
+.unified-header-back:active {
+    transform: scale(0.9);
+}
+
+.unified-header-spacer {
+    min-width: 40px; /* Balance layout */
+}
+
+/* ==========================================================================
+   OLD HEADERS (Deprecated - kept for compatibility)
+   ========================================================================== */
+
 .section-header {
     padding: 0 24px;
     margin-bottom: 20px;
@@ -630,6 +698,7 @@ body {
     text-transform: uppercase;
     background: linear-gradient(90deg, #fff, #6c5ce7, #fff);
     background-size: 200% auto;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shine 3s linear infinite;
