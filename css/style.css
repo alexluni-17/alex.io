@@ -70,7 +70,66 @@ body {
     /* border-bottom-right-radius: 30px; */ /* REMOVED */
     border-radius: 0;
     margin-bottom: 20px; /* Spazio sotto header per non sovrapporre */
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+/* ==========================================================================
+   4. TAB BAR (Mobile Navigation) - Matte Black Redesign
+   ========================================================================== */
+.tab-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(20, 20, 20, 0.98); /* Matte Black */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 10px calc(15px + env(safe-area-inset-bottom)) 10px;
+    z-index: 1000;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #888; /* Inactive Dark Grey */
+    font-size: 0.7rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.tab-item .icon-box {
+    margin-bottom: 4px;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    color: #888;
+}
+
+.tab-item.active {
+    color: #fff; /* Active White */
+}
+
+.tab-item.active .icon-box {
+    transform: translateY(-2px);
+    color: #fff;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3)); /* White Glow */
+}
+
+/* Rounded Active Indicator (Optional dot or line) */
+.tab-item.active::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: #fff;
+    border-radius: 50%;
+    margin-top: 2px;
+    position: absolute;
+    bottom: calc(5px + env(safe-area-inset-bottom));
 }
 
 /* Overlay scuro per leggerezza testo */
