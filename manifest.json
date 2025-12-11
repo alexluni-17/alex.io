@@ -1,6 +1,6 @@
 {
-  "name": "Social Games",
-  "short_name": "Social Games",
+  "name": "alex.io",
+  "short_name": "alex.io",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f0f2f5",

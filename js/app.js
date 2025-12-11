@@ -10,7 +10,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     initNavigation();
     initSearch();
+    initLoader();
 });
+
+// ============================================================
+// 0. LOADER SYSTEM
+// ============================================================
+function initLoader() {
+    const loader = document.getElementById('app-loader');
+    
+    // Mostra il loader per almeno 1.5 secondi per effetto "Premium"
+    // Poi nascondi con dissolvenza
+    setTimeout(() => {
+        loader.classList.add('hidden');
+        
+        // Rimuovi dal DOM dopo transizione CSS (0.5s) per performance
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
+    }, 1500);
+}
 
 // ============================================================
 // 1. MOCK DATA (Contenuto per la ricerca)
