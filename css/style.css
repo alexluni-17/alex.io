@@ -844,12 +844,19 @@ body {
     padding-bottom: 90px; /* Increased space */
 }
 
-/* --- FLOATING ACTION BUTTON --- */
-.floating-manage-btn {
+/* --- FLOATING ACTION BUTTONS CONTAINER --- */
+.floating-actions-container {
     position: absolute;
-    bottom: 25px; /* Closer to wheel/content */
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+    z-index: 30;
+}
+
+.floating-manage-btn {
     background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
     color: #fff;
     border: none;
@@ -859,7 +866,6 @@ body {
     font-weight: 700;
     font-size: 1rem;
     box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    z-index: 30;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
@@ -867,8 +873,27 @@ body {
 }
 
 .floating-manage-btn:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: scale(0.95);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.floating-icon-btn {
+    background: #fff;
+    color: #1a1a1a;
+    border: 2px solid #eee;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.floating-icon-btn:active {
+    transform: scale(0.92);
+    background: #f5f5f5;
 }
 
 /* --- MANAGE NAMES MODAL --- */

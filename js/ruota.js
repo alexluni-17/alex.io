@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // const namesInput = document.getElementById('names-input'); (REMOVED)
     // const entriesCount = document.getElementById('entries-count'); (REMOVED)
     const clearBtn = document.getElementById('clear-btn');
-    const shuffleBtn = document.getElementById('shuffle-btn');
+    // const shuffleBtn = document.getElementById('shuffle-btn'); (REMOVED)
     
     const winnerModal = document.getElementById('winner-modal');
     const winnerNameDisplay = document.getElementById('winner-name-display');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- INIZIALIZZAZIONE ---
     function init() {
-        namesInput.value = names.join('\n'); // Use actual newlines
+        // namesInput.value = names.join('\n'); (REMOVED)
         updateUI();
         drawWheel();
         animate(); // Avvia il loop
@@ -356,11 +356,24 @@ document.addEventListener('DOMContentLoaded', () => {
         newNameInput.focus();
     });
 
-    shuffleBtn.addEventListener('click', () => {
-        if (tempNames.length < 2) return;
-        tempNames.sort(() => Math.random() - 0.5);
-        renderNamesList();
-    });
+    // Main Shuffle Button (External)
+    const mainShuffleBtn = document.getElementById('shuffle-btn-main'); // NEW
+    
+    if(mainShuffleBtn) {
+        mainShuffleBtn.addEventListener('click', () => {
+             if (names.length < 2) return;
+             
+             // Haptic feedback
+             if (navigator.vibrate) navigator.vibrate(30);
+             
+             // Shuffle main array directly
+             names.sort(() => Math.random() - 0.5);
+             updateUI();
+             needsRedraw = true;
+             
+             // Optional: visual feedback via toast or animation could be added here
+        });
+    }
 
     function updateUI() {
         entriesCountBtn.textContent = names.length;
