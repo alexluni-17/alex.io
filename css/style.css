@@ -1,0 +1,536 @@
+/* ==========================================================================
+   1. CONFIGURAZIONE & VARIABILI GLOBALI
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* --- Palette Colori --- */
+    --bg-main: #f0f2f5;       
+    --bg-white: #ffffff;      
+    
+    /* Colore Bottone Centrale */
+    --fab-bg: #1e1e1e;        
+    --fab-icon-color: #ffffff;
+    
+    /* Colori Testo & Icone */
+    --text-dark: #2d3436;
+    --text-muted: #a4b0be;    
+    --primary-accent: #1e1e1e; 
+    
+    --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+/* ==========================================================================
+   2. RESET & STRUTTURA BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; 
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    height: 100vh;
+    overflow-x: hidden;
+    padding-bottom: 80px; /* Spazio per non coprire il contenuto */
+}
+
+/* Fix sovrapposizione header */
+#app {
+    padding-top: 20px; 
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease forwards;
+    opacity: 0;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+
+/* ==========================================================================
+   3. HEADER SUPERIORE
+   ========================================================================== */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 30px 24px;
+    /* Immagine di sfondo locale */
+    background: url('../logo.png') center/cover no-repeat;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    margin-bottom: 20px; /* Spazio sotto header per non sovrapporre */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+/* Overlay scuro per leggerezza testo */
+.top-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.75); /* Dark overlay */
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    z-index: -1;
+    backdrop-filter: blur(5px);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px; /* Squircle */
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.greeting {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.3;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.greeting span {
+    font-weight: 700;
+    color: #ffffff;
+    font-size: 1.3rem;
+    text-transform: none;
+    letter-spacing: -0.5px;
+}
+
+.action-btn {
+    width: 48px;
+    height: 48px;
+    background: rgba(255,255,255,0.1); /* Dark Glass */
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+}
+.action-btn:active { transform: scale(0.92); background: rgba(255,255,255,0.2); }
+
+.notif-dot {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 8px; height: 8px;
+    background: #ff4757;
+    border-radius: 50%;
+    border: 1px solid #000;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+/* ==========================================================================
+   4. CONTENUTO PRINCIPALE
+   ========================================================================== */
+/* ==========================================================================
+   4. CONTENUTO PRINCIPALE & Headings
+   ========================================================================== */
+.section-header {
+    padding: 0 24px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.section-header h2 { 
+    font-size: 1.4rem; 
+    font-weight: 700; 
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+.section-header .view-all { 
+    font-size: 0.8rem; 
+    color: #ffffff; 
+    text-decoration: none; 
+    font-weight: 600;
+    background: #000000;
+    padding: 8px 16px;
+    border-radius: 30px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.section-header .view-all:active { 
+    transform: scale(0.95);
+    background: #333;
+}
+
+.horizontal-scroll {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 0 24px 20px 24px;
+    scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar { display: none; }
+
+/* STATS GRID (4 colonne fisse) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px; /* Spazio stretto */
+    padding: 0 16px; /* Margin laterale */
+    margin-bottom: 25px;
+}
+
+/* STAT CARD COMPACT & REFINED */
+.stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px 6px; /* Meno padding laterale */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+    border: 1px solid rgba(0,0,0,0.03);
+    transition: transform 0.2s ease;
+    height: auto;
+    min-width: 0; /* Override */
+    aspect-ratio: 0.85; /* Verticale leggero */
+}
+.stat-card:active { transform: scale(0.95); background: #f8f9fa; }
+
+/* Icona */
+.stat-icon-wrapper {
+    /* Container per SVG */
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    width: 32px; height: 32px;
+}
+.stat-icon-wrapper svg {
+    width: 26px; height: 26px; /* Icone proporzionate */
+}
+
+/* Valore numerico */
+.stat-value {
+    font-weight: 800;
+    font-size: 0.95rem; /* Ridotto leggermente */
+    color: var(--text-dark);
+    line-height: 1;
+}
+
+/* Label */
+.stat-label {
+    font-size: 0.6rem; /* Molto piccola ma leggibile */
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: nowrap; /* Evita a capo */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* GRIGLIA CARDS GRANDI (Aggiornata) */
+.big-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+    padding: 0 24px 100px 24px; /* Padding bottom per scroll */
+}
+
+.big-card {
+    position: relative;
+    height: 220px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: #000; /* Fallback */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Ombra profonda */
+    transition: transform 0.2s ease;
+}
+.big-card:active { transform: scale(0.98); }
+
+.big-card img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+/* Zoom leggero su immagine */
+.big-card:hover img { transform: scale(1.1); }
+
+.big-card-content {
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    padding: 20px 15px;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6), transparent);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.big-card-content h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+.big-card-content p {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   5. NUOVA TAB BAR (Corretta: Squadrata e Pulsante Dentro)
+   ========================================================================== */
+
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    /* Altezza fissa standard + Safe Area (Aumentata spessore) */
+    height: calc(85px + env(safe-area-inset-bottom));
+    background-color: var(--bg-white);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centra verticalmente gli elementi */
+    
+    padding: 0 10px; /* Padding laterale leggero */
+    padding-bottom: env(safe-area-inset-bottom);
+    
+    /* Bordi e Ombre */
+    border-top: 1px solid rgba(0,0,0,0.05); /* Separatore sottile in alto */
+    box-shadow: none; /* Rimosso ombra pesante per look flat */
+    z-index: 1000;
+    
+    /* NESSUN ARROTONDAMENTO */
+    border-radius: 0; 
+}
+
+/* Stile comune per tutti gli elementi (compreso il centrale) */
+.tab-item {
+    flex: 1; /* Distribuzione equa dello spazio */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    height: 100%; /* Occupa tutta l'altezza della barra */
+    color: var(--text-muted);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Icona standard */
+.tab-item .icon-box svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 2px;
+    transition: stroke 0.2s ease;
+}
+
+/* Label sotto l'icona */
+.tab-label {
+    font-size: 10px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* --- STATO ATTIVO --- */
+.tab-item.active {
+    color: var(--primary-accent);
+}
+.tab-item.active .icon-box svg {
+    stroke: var(--primary-accent);
+}
+
+/* --- PULSANTE CENTRALE (Integrato) --- */
+/* Rimosso transform/translate negativi. Ora è dentro la griglia. */
+.tab-item.center-action {
+    transform: none; 
+    margin: 0;
+}
+
+.center-btn {
+    /* Dimensione contenuta per stare DENTRO la barra di 60px */
+    width: 40px; 
+    height: 40px;
+    background-color: var(--fab-bg);
+    border-radius: 8px; /* Leggermente stondato come le app moderne o 50% per cerchio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: none; /* Niente ombra che lo fa sembrare flottante */
+    transition: transform 0.1s ease;
+}
+
+/* Icona dentro il pulsante centrale */
+.center-btn svg {
+    width: 24px;
+    height: 24px;
+    stroke: #ffffff; 
+}
+
+.center-btn:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+}
+
+/* ==========================================================================
+   6. SEARCH OVERLAY
+   ========================================================================== */
+/* ==========================================================================
+   6. SEARCH OVERLAY (DARK PREMIUM DESIGN)
+   ========================================================================== */
+.search-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Dark Background */
+    background: rgba(10, 10, 12, 0.92); 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.search-overlay:not(.hidden) {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Header della ricerca */
+.search-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Wrapper Input e Risultati condividono la stessa larghezza visiva */
+.search-input-wrapper {
+    /* Larghezza identica ai risultati - aumentata per riempire */
+    width: 95%;
+    max-width: 600px;
+    
+    background: #1e1e1e; /* Dark Surface per la barra */
+    border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 20px;
+    padding: 18px 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4); 
+    transform: translateY(-20px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    color: #fff;
+    margin: 0 auto; /* Centrato */
+}
+.search-overlay:not(.hidden) .search-input-wrapper {
+    transform: translateY(0);
+}
+
+.search-icon {
+    color: #a4b0be;
+    opacity: 1;
+}
+
+#global-search-input {
+    flex: 1; 
+    border: none; 
+    background: transparent; 
+    outline: none;
+    font-size: 1.1rem; 
+    color: #ffffff; /* White text */
+    font-weight: 500;
+}
+#global-search-input::placeholder {
+    color: #636e72;
+}
+
+.close-search { 
+    background: rgba(255,255,255,0.1); 
+    border: none; 
+    cursor: pointer; 
+    color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.close-search:hover { background: rgba(255,255,255,0.2); }
+
+/* Contenitore Risultati - Allineato a Input */
+.search-results { 
+    width: 95%; 
+    max-width: 600px; 
+    margin-top: 30px; 
+    overflow-y: auto; 
+    max-height: calc(100vh - 180px);
+    padding-bottom: 40px;
+    scrollbar-width: none;
+}
+.search-results::-webkit-scrollbar { display: none; }
+
+/* Stile Righe Risultati (Light / Bianco come richiesto) */
+.result-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+    padding: 20px;
+    background: #ffffff; /* Sfondo Bianco */
+    border: none;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    /* Animazione entrata */
+    opacity: 0;
+    animation: slideUpFade 0.4s forwards;
+    color: var(--text-dark); /* Testo Scuro */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Override colori testo per il tema chiaro */
+.result-row h4 { color: #2d3436 !important; font-weight: 600 !important; }
+.result-row p { color: #636e72 !important; }
+
+.result-row:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    background: #f8f9fa;
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-top: 40px;
+}
