@@ -69,13 +69,13 @@ function initSearch() {
     // Elementi DOM
     const fab = document.querySelector('.center-btn'); 
     
-    // Guard Clause: Se non c'è il bottone (es. pagine interne senza ricerca), esci senza errori
-    if (!fab) return;
-
     const overlay = document.getElementById('search-overlay');
     const closeBtn = document.getElementById('close-search-btn');
     const input = document.getElementById('global-search-input');
     const resultsArea = document.getElementById('search-results-container');
+
+    // Guard Clause: Verifica che TUTTI gli elementi necessari esistano
+    if (!fab || !overlay || !closeBtn || !input) return;
 
     // 3a. Apri Ricerca
     fab.addEventListener('click', () => {
