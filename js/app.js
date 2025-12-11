@@ -67,7 +67,11 @@ function initNavigation() {
 // ============================================================
 function initSearch() {
     // Elementi DOM
-    const fab = document.querySelector('.center-btn'); // Modified selector
+    const fab = document.querySelector('.center-btn'); 
+    
+    // Guard Clause: Se non c'è il bottone (es. pagine interne senza ricerca), esci senza errori
+    if (!fab) return;
+
     const overlay = document.getElementById('search-overlay');
     const closeBtn = document.getElementById('close-search-btn');
     const input = document.getElementById('global-search-input');
