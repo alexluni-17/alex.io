@@ -1548,6 +1548,43 @@ body {
     letter-spacing: 1px;
 }
 
+/* Filter Tags */
+.filter-scroll {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 16px 20px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.filter-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-tag {
+    padding: 8px 24px;
+    background: #fff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    white-space: nowrap;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.filter-tag:active {
+    transform: scale(0.95);
+}
+
+.filter-tag.active {
+    background: #1a1a1a;
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
 .card-price {
     font-weight: 700;
     color: #1a1a1a;

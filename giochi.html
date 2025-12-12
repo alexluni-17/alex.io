@@ -51,58 +51,21 @@
         </header>
 
         <!-- GRIGLIA GIOCHI -->
-        <div class="big-card-grid fade-in">
-            <!-- Card 1 -->
-            <div class="big-card"> 
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=80" alt="Esports">
-                <div class="big-card-content">
-                    <h3>Torneo Pro</h3>
-                    <p>Esports</p>
-                </div>
-            </div>
-            <!-- Card 2 -->
-            <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80" alt="Retro">
-                <div class="big-card-content">
-                    <h3>Sfida Live</h3>
-                    <p>Multiplayer</p>
-                </div>
-            </div>
-             <!-- Card 3 -->
-             <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=400&q=80" alt="Arcade">
-                <div class="big-card-content">
-                    <h3>Arcade</h3>
-                    <p>Endless Run</p>
-                </div>
-            </div>
-             <!-- Card 4 -->
-             <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1538481199705-c710c4e965fc?auto=format&fit=crop&w=400&q=80" alt="VR">
-                <div class="big-card-content">
-                    <h3>VR World</h3>
-                    <p>Immersive</p>
-                </div>
-            </div>
-            <!-- Card 5 (Extra) -->
-            <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=400&q=80" alt="Poker">
-                <div class="big-card-content">
-                    <h3>Poker Night</h3>
-                    <p>Card Game</p>
-                </div>
-            </div>
-            <!-- Card 6 (Extra) -->
-            <div class="big-card">
-                <img src="https://images.unsplash.com/photo-1605901309584-818e25960b8f?auto=format&fit=crop&w=400&q=80" alt="Chess">
-                <div class="big-card-content">
-                    <h3>Scacchi 3D</h3>
-                    <p>Strategy</p>
-                </div>
-            </div>
+
+        <!-- Filters -->
+        <div class="filter-scroll fade-in" style="animation-delay: 0.1s">
+            <div class="filter-tag active" data-filter="normal">Normali</div>
+            <div class="filter-tag" data-filter="18+">+18</div>
+        </div>
+
+        <!-- Dynamic Game Grid -->
+        <div id="games-grid" class="modern-grid fade-in" style="animation-delay: 0.2s">
+            <!-- Games rendered by JS -->
         </div>
 
     </main>
+    
+    <script src="js/games.js"></script>
 
     <!-- Bottom Navigation -->
      <nav class="tab-bar">
