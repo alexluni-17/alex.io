@@ -44,13 +44,15 @@ body {
 
 /* Card Container (Handles Tilt + Scale + Visibility) */
 .card-container {
-    width: var(--card-width);
+width: var(--card-width);
     height: var(--card-height);
-    transform-style: preserve-3d;
-    cursor: grab;
-    transition: transform 0.1s ease-out, opacity 0.5s ease, pointer-events 0s linear 0.5s;
     
-    /* Default Hidden State */
+    /* Aggiungi/Verifica queste righe: */
+    min-width: var(--card-width);  /* Impedisce di restringersi */
+    min-height: var(--card-height); /* Impedisce di restringersi */
+    max-width: var(--card-width);  /* Impedisce di allargarsi */
+    max-height: var(--card-height); /* Impedisce di allungarsi! IMPORTANTE */
+    
     position: absolute;
     top: 0; left: 0;
     opacity: 0;
@@ -378,7 +380,7 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 50%; /* Vertical spacing */
-    width: 100%;
+    /* width: 100%; Removed to allow side-by-side */
 }
 
 .pips-column-3 {
@@ -387,7 +389,8 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 70%; /* More height than Twos */
-    width: 100%;
+    height: 70%; /* More height than Twos */
+    /* width: 100%; Removed */
 }
 
 .pips-double-column {
@@ -412,7 +415,36 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100%; /* Full height */
-    width: 100%;
+    height: 100%; /* Full height */
+    /* width: 100%; Removed */
+}
+
+/* New Layout Helpers */
+.pips-triple-column {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    height: 100%;
+    align-items: center;
+}
+
+.mid-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+}
+
+.mid-space-around {
+    justify-content: space-around;
+}
+
+.mid-center {
+    justify-content: center;
+}
+
+.pip-hidden {
+    visibility: hidden;
 }
 
 .abs-top-offset {
@@ -471,16 +503,50 @@ body {
 }
 
 
-/* Mobile Handling */
+/* Mobile Handling - FIX DEFINITIVO */
 @media (max-width: 450px) {
     :root {
+        /* Dimensioni carta mobile */
         --card-width: 260px;
         --card-height: 364px;
         --card-radius: 20px;
     }
-    .rank { font-size: 1.8rem; }
-    .suit { font-size: 1.6rem; }
+
+    /* Riduciamo numeri e semi agli angoli */
+    .rank { font-size: 1.5rem; }
+    .suit { font-size: 1.2rem; }
+
+    /* Figure (K, Q, J): Loro andavano già bene, le lasciamo adattabili */
     .face-card-art { font-size: 6rem; }
+    .king-image { width: 80%; } 
+
+    /* === QUI STA LA MAGIA PER I NUMERI === */
+    
+    /* 1. Sgonfiamo i simboli (pips) solo sul mobile */
+    /* Prima erano 4rem (troppo grandi), ora 2.2rem */
+    .pip {
+        font-size: 2.2rem; 
+    }
+
+    /* 2. Riduciamo anche l'Asso centrale */
+    .ace-big-suit {
+        font-size: 6rem;
+    }
+
+    /* 3. Allarghiamo le colonne invisibili che contengono i simboli */
+    /* Così non si schiacciano tra loro orizzontalmente */
+    .pips-double-column {
+        width: 85%; 
+    }
+    .pips-triple-column {
+        width: 95%; 
+    }
+    
+    /* 4. Riduciamo l'altezza delle colonne */
+    /* Questo serve per il 9 e il 10: impedisce che tocchino i bordi sopra e sotto */
+    .pips-column-4, .pips-column-3 {
+        height: 90%; 
+    }
 }
 
 .controls {
