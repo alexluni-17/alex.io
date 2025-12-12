@@ -1442,26 +1442,38 @@ body {
 .modern-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    padding: 0 8px 110px 8px; 
+    gap: 15px; /* Tighter gap */
+    padding: 0 16px 110px 16px; 
 }
 
 .modern-card {
-    background: #f8f9fa; 
-    border-radius: 20px;
-    overflow: hidden;
     position: relative;
-    transition: transform 0.2s;
-    display: block; /* Ensure it behaves like a block */
-    text-decoration: none; /* Remove underline */
-    color: inherit; /* Inherit text color */
+    border-radius: 24px;
+    overflow: hidden;
+    aspect-ratio: 3/4; /* Vertical layout */
+    background: #222; /* Fallback */
+    display: block;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Soft shadow */
+    border: none;
+}
+
+/* Hover/Active Scale */
+.modern-card:active {
+    transform: scale(0.97);
+}
+
+.modern-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.25);
 }
 
 .card-image-area {
-    width: 100%;
-    aspect-ratio: 1/1.1; 
-    background: #ececec;
-    position: relative;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 1;
+    background: none;
 }
 
 .card-image-area img {
@@ -1480,28 +1492,60 @@ body {
     border-radius: 20px;
     font-weight: 700;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 3; /* Above image */
 }
 
 .card-info {
-    padding: 15px;
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    z-index: 2;
+    background: linear-gradient(to top, rgba(0,0,0,0.95) 15%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
+    padding: 50px 15px 15px 15px; /* Large top padding for gradient fade */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 .card-title {
-    font-size: 1rem;
+    color: #fff;
+    font-size: 1.1rem;
     font-weight: 700;
-    color: #1a1a1a;
-    margin: 0 0 6px 0;
+    margin: 0 0 4px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: -0.3px;
 }
 
 .card-meta {
-    font-size: 0.85rem;
-    color: #777;
+    font-size: 0.8rem;
+    color: #ccc;
     font-weight: 500;
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Updated Meta Span - Clean Text */
+.card-meta span {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+    display: inline-block;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Optional Star Rating Simulation */
+.card-meta span::after {
+    content: ' ★ ★ ★ ★ ★';
+    color: #FFD700;
+    font-size: 0.7rem;
+    margin-left: 6px;
+    letter-spacing: 1px;
 }
 
 .card-price {
