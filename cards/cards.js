@@ -1,7 +1,88 @@
 const scene = document.querySelector('.scene');
-const cardContainer = document.querySelector('.card-container');
+const cards = document.querySelectorAll('.card-container');
+// const cardSelector ... removed
 
-// State
+let currentIndex = 0;
+
+// Update UI to show current card
+function updateGallery() {
+    cards.forEach((card, index) => {
+        if (index === currentIndex) {
+            card.classList.add('active');
+            // Reset transform when becoming active to avoid weird jumps
+            card.style.transform = 'translate(0) rotate(0)'; 
+        } else {
+            card.classList.remove('active');
+        }
+    });
+    // Reset state for new card
+    isFlipped = false; 
+    cards[currentIndex].classList.remove('is-flipped');
+    currentRotationX = 0;
+    currentRotationY = 0;
+}
+
+// Custom Dropdown Logic
+const customSelect = document.getElementById('customSelect');
+const triggerText = document.getElementById('triggerText');
+const options = document.querySelectorAll('.custom-option');
+const headers = document.querySelectorAll('.category-header');
+
+// Toggle Main Dropdown
+customSelect.addEventListener('click', (e) => {
+    // Only toggle if clicking the trigger itself or its children (not submenu items)
+    if (e.target.closest('.select-trigger')) {
+        customSelect.classList.toggle('open');
+    }
+});
+
+// Toggle Categories (Accordion)
+headers.forEach(header => {
+    header.addEventListener('click', (e) => {
+        e.stopPropagation(); // Don't close main dropdown
+        const parent = header.parentElement;
+        
+        // Optional: Close others
+        document.querySelectorAll('.category-item.expanded').forEach(item => {
+            if (item !== parent) item.classList.remove('expanded');
+        });
+
+        parent.classList.toggle('expanded');
+    });
+});
+
+// Handle Selection
+options.forEach(option => {
+    option.addEventListener('click', (e) => {
+        e.stopPropagation(); // prevent bubbling 
+        
+        // Remove old selected
+        document.querySelector('.custom-option.selected')?.classList.remove('selected');
+        options.forEach(opt => opt.classList.remove('selected')); // ensure clean state
+        
+        // Add new
+        option.classList.add('selected');
+        
+        // Update Text
+        triggerText.textContent = option.textContent;
+        
+        // Update Gallery
+        currentIndex = parseInt(option.getAttribute('data-value'));
+        updateGallery();
+        
+        // Close Main Dropdown
+        customSelect.classList.remove('open');
+    });
+});
+
+// Close when clicking outside
+document.addEventListener('click', (e) => {
+    if (!customSelect.contains(e.target)) {
+        customSelect.classList.remove('open');
+    }
+});
+
+// --- Interaction State ---
 let isDragging = false;
 let startX = 0;
 let startY = 0;
@@ -10,13 +91,21 @@ let currentRotationY = 0;
 let isFlipped = false;
 let hasMoved = false;
 
+// Helper to get active card
+function getActiveCard() {
+    return cards[currentIndex];
+}
+
 // --- Touch Handling ---
 scene.addEventListener('touchstart', (e) => {
+    // Ignore if touching controls
+    if (e.target.closest('#cardSelector')) return;
+
     isDragging = true;
     hasMoved = false;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
-    cardContainer.style.cursor = 'grabbing';
+    getActiveCard().style.cursor = 'grabbing';
 }, { passive: false });
 
 scene.addEventListener('touchmove', (e) => {
@@ -36,17 +125,19 @@ scene.addEventListener('touchmove', (e) => {
 
 scene.addEventListener('touchend', () => {
     isDragging = false;
-    cardContainer.style.cursor = 'grab';
-    // We do NOT flip here. We let the 'click' event handle it if no drag occurred.
+    getActiveCard().style.cursor = 'grab';
+    // Click handles flip
 });
 
 // --- Mouse Handling ---
 scene.addEventListener('mousedown', (e) => {
+    if (e.target.closest('#cardSelector')) return;
+
     isDragging = true;
     hasMoved = false;
     startX = e.clientX;
     startY = e.clientY;
-    cardContainer.style.cursor = 'grabbing';
+    getActiveCard().style.cursor = 'grabbing';
 });
 
 document.addEventListener('mousemove', (e) => {
@@ -64,28 +155,31 @@ document.addEventListener('mousemove', (e) => {
 
 document.addEventListener('mouseup', () => {
     isDragging = false;
-    cardContainer.style.cursor = 'grab';
+    if(getActiveCard()) getActiveCard().style.cursor = 'grab';
 });
 
-// --- Unified Click Handler (Desktop & Mobile) ---
-// This listener runs for both Mouse Click and Touch Tap
-cardContainer.addEventListener('click', (e) => {
-    // Only flip if we haven't dragged significantly
-    if (!hasMoved) {
-        toggleFlip();
+// --- Unified Click Handler ---
+// Bind click to the scene, check target
+scene.addEventListener('click', (e) => {
+    if (e.target.closest('#cardSelector')) return; // let selector work
+
+    // Check if we clicked on the active card
+    const activeCard = getActiveCard();
+    if (activeCard && activeCard.contains(e.target)) {
+        if (!hasMoved) {
+            toggleFlip();
+        }
     }
-    // If we did drag, 'click' might still fire (depending on browser), but hasMoved will block it.
-    // Note: 'hasMoved' is reset on start. It persists until next start.
-    // Click always happens after end. reliable.
 });
 
 // --- Logic ---
 function toggleFlip() {
-    isFlipped = !isFlipped;
+    const card = getActiveCard();
+    isFlipped = !card.classList.contains('is-flipped'); // Toggle based on class state
     if (isFlipped) {
-        cardContainer.classList.add('is-flipped');
+        card.classList.add('is-flipped');
     } else {
-        cardContainer.classList.remove('is-flipped');
+        card.classList.remove('is-flipped');
     }
 }
 
@@ -94,7 +188,7 @@ function performTilt(x, y) {
     const deltaY = y - startY;
 
     // Dampening
-    currentRotationY += deltaX * 0.3; // Increased sensitivity slightly
+    currentRotationY += deltaX * 0.3;
     currentRotationX -= deltaY * 0.3;
 
     // Hard Limits
@@ -108,6 +202,9 @@ function performTilt(x, y) {
 }
 
 function updateTransform() {
-    // Only apply tilt to container. Flip handles inner.
-    cardContainer.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+    // Apply tilt to active card
+    getActiveCard().style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
 }
+
+// Init
+updateGallery();
