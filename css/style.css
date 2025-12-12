@@ -867,7 +867,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 15px;
-    z-index: 30;
+    z-index: 100; /* Increased z-index to be above canvas */
     pointer-events: none; /* Let clicks pass strictly through gaps */
 }
 
@@ -878,6 +878,7 @@ body {
     border: none;
     padding: 10px 20px; /* Smaller padding */
     border-radius: 12px; /* More squared */
+    pointer-events: auto; /* Enable clicks */
     font-family: 'Outfit', sans-serif;
     font-weight: 700;
     font-size: 0.9rem; /* Smaller font */
@@ -899,6 +900,7 @@ body {
     border: 2px solid #eee;
     width: 40px; height: 40px; /* Smaller size */
     border-radius: 12px; /* More squared (matching manage btn) */
+    pointer-events: auto; /* Enable clicks */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1297,7 +1299,7 @@ body {
 
 /* Modern Hero Banner */
 .hero-banner {
-    margin: 0 8px 30px 8px;
+    margin: 10px 8px 30px 8px;
     background: linear-gradient(135deg, #ffffff 0%, #f0f2f5 100%);
     border-radius: 28px;
     padding: 30px 24px;
@@ -1450,6 +1452,9 @@ body {
     overflow: hidden;
     position: relative;
     transition: transform 0.2s;
+    display: block; /* Ensure it behaves like a block */
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit text color */
 }
 
 .card-image-area {
