@@ -1415,27 +1415,33 @@ body {
 }
 
 /* Section Head */
+/* Section Head */
 .section-header-modern {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end; 
-    padding: 0 8px;
-    margin-bottom: 20px;
+    align-items: center; /* Center vertically */
+    padding: 0 16px; /* Match grid padding */
+    margin-bottom: 24px;
 }
 
 .section-header-modern h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #1a1a1a;
+    font-size: 1.6rem; /* Larger */
+    font-weight: 800;
+    color: #111;
     margin: 0;
-    letter-spacing: -0.5px;
+    letter-spacing: -0.8px;
 }
 
 .section-header-modern .see-all {
-    font-size: 0.9rem;
-    color: #888;
+    font-size: 0.95rem;
+    color: #888; /* Grey as in image */
     text-decoration: underline;
-    font-weight: 500;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.section-header-modern .see-all:hover {
+    color: #333;
 }
 
 /* Modern Grid */
