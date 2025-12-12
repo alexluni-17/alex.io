@@ -2,8 +2,8 @@
     --card-width: 300px;
     --card-height: 420px;
     --card-radius: 24px;
-    --card-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    --bg-color: #121212;
+    --card-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    --bg-color: #fceecb; /* Cream/Panna */
     --gold: #d4af37;
     --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
 }
@@ -16,7 +16,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: var(--bg-color);
-    background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    background: radial-gradient(circle at center, #fff8e1 0%, #fceecb 100%);
     font-family: 'Playfair Display', serif;
     overflow: hidden;
 }
@@ -273,25 +273,44 @@ width: var(--card-width);
     backface-visibility: hidden; /* Hide back when flipped */
     box-shadow: var(--card-shadow);
     overflow: hidden;
+    box-sizing: border-box; /* CRITICAL: Ensure consistent sizing */
 }
 
-/* -- FRONT FACE -- */
+/* -- FRONT FACE (PREMIUM) -- */
 .card-front {
-    background: #fff;
-    border: 8px solid #fff;
+    background: 
+        /* Subtle paper texture */
+        radial-gradient(ellipse at center, #fffef8 0%, #f5f0e6 100%);
+    border: 6px solid #b8922d; /* Solid gold border for compatibility */
     box-sizing: border-box;
     display: flex;
     padding: 20px;
+    box-shadow: 
+        var(--card-shadow),
+        inset 0 0 30px rgba(212, 175, 55, 0.05);
+    position: relative;
 }
-/* Gold Border Inner */
-.card-front::after {
+
+/* Ornate Inner Frame */
+.card-front::before {
     content: '';
     position: absolute;
-    top: 10px; left: 10px; right: 10px; bottom: 10px;
-    border: 2px solid #d4af37;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 1.5px solid rgba(212, 175, 55, 0.6);
     border-radius: 16px;
     pointer-events: none;
-    opacity: 0.5;
+    /* Corner Accents */
+    background: 
+        radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.2) 0%, transparent 10%),
+        radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.2) 0%, transparent 10%),
+        radial-gradient(circle at 0% 100%, rgba(212, 175, 55, 0.2) 0%, transparent 10%),
+        radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.2) 0%, transparent 10%);
+    z-index: 0;
+}
+
+/* Removed old ::after, using ::before now */
+.card-front::after {
+    display: none;
 }
 
 /* Texture Pattern (Subtle paper look) */
@@ -300,9 +319,15 @@ width: var(--card-width);
     display: none;
 }
 
-/* Suits Colors */
-.card-front.red { color: #d63031; }
-.card-front.black { color: #2d3436; }
+/* Suits Colors - Rich and Premium */
+.card-front.red { 
+    color: #c0392b; 
+    text-shadow: 0 1px 2px rgba(192, 57, 43, 0.3);
+}
+.card-front.black { 
+    color: #1a1a1a; 
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 
 /* Typography */
 .rank {
@@ -351,7 +376,7 @@ width: var(--card-width);
     max-height: 90%;
 }
 
-/* Aces Big Suit */
+/* Aces Big Suit - Premium */
 .ace-big-suit {
     font-size: 10rem;
     line-height: 1;
@@ -361,7 +386,11 @@ width: var(--card-width);
     width: 100%;
     height: 100%;
     color: inherit; 
-    text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-shadow: 
+        0 2px 4px rgba(0,0,0,0.15),
+        0 8px 20px rgba(0,0,0,0.1);
+    filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.15));
+    transition: transform 0.3s ease;
 }
 
 /* Pips Layouts */
@@ -475,15 +504,86 @@ width: var(--card-width);
     transform: translate(-50%, 50%);
 }
 
-/* -- BACK FACE (Image) -- */
+/* -- BACK FACE (SPECTACULAR CSS) -- */
 .card-back {
     transform: rotateY(180deg);
-    background: url('back.png') center/cover no-repeat;
-    /* Ensure image respects border radius */
+    background: 
+        /* Vignette Effect */
+        radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.8) 100%),
+        /* Central Starburst */
+        repeating-conic-gradient(from 0deg at 50% 50%, 
+            rgba(212, 175, 55, 0.08) 0deg 5deg, 
+            transparent 5deg 10deg),
+        /* Ornate Diamond Grid */
+        repeating-linear-gradient(45deg, 
+            transparent 0px, transparent 8px, 
+            rgba(212, 175, 55, 0.15) 8px, rgba(212, 175, 55, 0.15) 9px,
+            transparent 9px, transparent 17px),
+        repeating-linear-gradient(-45deg, 
+            transparent 0px, transparent 8px, 
+            rgba(212, 175, 55, 0.15) 8px, rgba(212, 175, 55, 0.15) 9px,
+            transparent 9px, transparent 17px),
+        /* Subtle Horizontal Lines */
+        repeating-linear-gradient(0deg,
+            transparent 0px, transparent 3px,
+            rgba(212, 175, 55, 0.03) 3px, rgba(212, 175, 55, 0.03) 4px),
+        /* Deep Rich Base */
+        linear-gradient(180deg, #1a0a00 0%, #0a0505 50%, #1a0a00 100%);
+    
     border-radius: var(--card-radius); 
-    border: none; /* Image provides the look */
-    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); /* Subtle edge definition */
+    border: 6px solid #b8922d; /* Solid gold border for compatibility */
+    box-shadow: 
+        inset 0 0 60px rgba(0,0,0,0.9),
+        inset 0 0 100px rgba(139, 105, 20, 0.1);
+    position: relative;
+    overflow: hidden;
 }
+
+/* Outer Decorative Frame */
+.card-back::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 8px;
+    border: 2px solid rgba(212, 175, 55, 0.7);
+    border-radius: 16px;
+    /* Corner Flourishes (simulated) */
+    background: 
+        radial-gradient(circle at 0% 0%, rgba(212, 175, 55, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 100% 0%, rgba(212, 175, 55, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 0% 100%, rgba(212, 175, 55, 0.4) 0%, transparent 15%),
+        radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.4) 0%, transparent 15%);
+    z-index: 1;
+}
+
+/* Central Medallion */
+.card-back::after {
+    content: '♠';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    font-family: 'Playfair Display', serif;
+    color: rgba(212, 175, 55, 0.6);
+    text-shadow: 
+        0 0 20px rgba(212, 175, 55, 0.5),
+        0 0 40px rgba(139, 105, 20, 0.3);
+    /* Circular Halo */
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 60%);
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid rgba(212, 175, 55, 0.4);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 30px rgba(212, 175, 55, 0.2),
+        inset 0 0 20px rgba(0,0,0,0.5);
+    z-index: 2;
+}
+
+.back-pattern, .back-pattern::after { display: none; }
 
 
 
@@ -552,10 +652,22 @@ width: var(--card-width);
 .controls {
     position: absolute;
     bottom: 30px;
-    color: rgba(255,255,255,0.4);
+    color: rgba(60, 40, 10, 0.6); /* Darker text for light background */
     font-family: 'Outfit', sans-serif;
     font-size: 0.85rem;
     pointer-events: none;
     text-transform: uppercase;
     letter-spacing: 2px;
+}
+
+/* Joker Vertical Text */
+.joker-rank {
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+    text-align: center; /* Ensures text inside is centered */
+    letter-spacing: 0; /* Prevents off-center look in vertical stacks */
+    font-weight: 700;
 }
