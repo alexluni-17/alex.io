@@ -13,7 +13,7 @@ let hasMoved = false;
 // --- Touch Handling ---
 scene.addEventListener('touchstart', (e) => {
     isDragging = true;
-    hasMoved = false; // Reset move flag
+    hasMoved = false;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
     cardContainer.style.cursor = 'grabbing';
@@ -22,14 +22,14 @@ scene.addEventListener('touchstart', (e) => {
 scene.addEventListener('touchmove', (e) => {
     if (!isDragging) return;
     
+    // Check for drag
     const x = e.touches[0].clientX;
     const y = e.touches[0].clientY;
-    
-    // Check if we actually moved significantly (> 5px) to consider it a drag
     const moveDist = Math.hypot(x - startX, y - startY);
+    
     if (moveDist > 5) {
         hasMoved = true;
-        e.preventDefault(); // Prevent scrolling only if dragging card
+        e.preventDefault(); // Prevent scrolling if dragging card
         performTilt(x, y);
     }
 }, { passive: false });
@@ -37,11 +37,7 @@ scene.addEventListener('touchmove', (e) => {
 scene.addEventListener('touchend', () => {
     isDragging = false;
     cardContainer.style.cursor = 'grab';
-    
-    // If we didn't move properly, it's a tap -> FLIP
-    if (!hasMoved) {
-        toggleFlip();
-    }
+    // We do NOT flip here. We let the 'click' event handle it if no drag occurred.
 });
 
 // --- Mouse Handling ---
@@ -58,8 +54,8 @@ document.addEventListener('mousemove', (e) => {
     
     const x = e.clientX;
     const y = e.clientY;
-    
     const moveDist = Math.hypot(x - startX, y - startY);
+    
     if (moveDist > 5) {
         hasMoved = true;
         performTilt(x, y);
@@ -67,11 +63,20 @@ document.addEventListener('mousemove', (e) => {
 });
 
 document.addEventListener('mouseup', () => {
-    if (isDragging && !hasMoved) {
-        toggleFlip();
-    }
     isDragging = false;
     cardContainer.style.cursor = 'grab';
+});
+
+// --- Unified Click Handler (Desktop & Mobile) ---
+// This listener runs for both Mouse Click and Touch Tap
+cardContainer.addEventListener('click', (e) => {
+    // Only flip if we haven't dragged significantly
+    if (!hasMoved) {
+        toggleFlip();
+    }
+    // If we did drag, 'click' might still fire (depending on browser), but hasMoved will block it.
+    // Note: 'hasMoved' is reset on start. It persists until next start.
+    // Click always happens after end. reliable.
 });
 
 // --- Logic ---

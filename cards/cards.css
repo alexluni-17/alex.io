@@ -132,9 +132,18 @@ body {
 }
 
 .face-card-art {
-    font-size: 8rem;
-    color: inherit;
-    /* Optional: Add custom SVG or image for King here */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.king-image {
+    width: 80%; /* Adjust size relative to card width */
+    height: auto;
+    object-fit: contain;
+    max-height: 80%;
 }
 
 /* -- BACK FACE (Image) -- */
@@ -147,8 +156,10 @@ body {
     box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); /* Subtle edge definition */
 }
 
+
+
 .back-pattern {
-    display: none; /* Hide old pattern logic */
+    display: none;
 }
 
 /* Center Emblem on Back */
