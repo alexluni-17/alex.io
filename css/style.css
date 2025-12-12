@@ -1237,23 +1237,7 @@ body {
    5. MODERN HOME REDESIGN (AROBIX Style)
    ========================================================================== */
 
-/* Modern Header */
-.modern-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: calc(env(safe-area-inset-top) + 10px) 12px 10px 12px;
-    background: #ffffff;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 50;
-}
 
-.modern-header .logo-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
 .modern-header .header-logo {
     height: 48px;

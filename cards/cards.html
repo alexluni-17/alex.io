@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Magical Playing Cards</title>
+    <link rel="stylesheet" href="cards.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="scene">
+        <div class="card-container">
+            <div class="card-inner">
+                <!-- FRONT -->
+                <div class="card-face card-front red" data-value="K" data-suit="♥">
+                    <!-- Subtle texture overlay -->
+                    <div class="card-texture"></div>
+                    
+                    <div class="card-corner top-left">
+                        <div class="rank">K</div>
+                        <div class="suit">♥</div>
+                    </div>
+                    
+                    <div class="card-center">
+                        <div class="face-card-art">
+                            <span class="big-rank">♔</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-corner bottom-right">
+                        <div class="rank">K</div>
+                        <div class="suit">♥</div>
+                    </div>
+                </div>
+
+                <!-- BACK -->
+                <div class="card-face card-back">
+                    <div class="back-pattern"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="controls">
+        <p>Tap to Flip • Drag to Tilt</p>
+    </div>
+
+    <script src="cards.js"></script>
+</body>
+</html>
